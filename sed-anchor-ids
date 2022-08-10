@@ -1,0 +1,9 @@
+Sed commands to add anchor IDs to Asciidoc files.
+
+# Creates anchor ID above header, copies header text to anchor ID, strips "=" from ID
+
+$ sed -i '/^=/s/^\(=\{0,\} \).*/[id\=\"&\"]\n&/; /^\[id\=\"/s/"=\{0,5\} /"/' my_file.adoc
+
+# Converts spaces to hyphens, upper-case characters to lower case, strips backticks, brackets, and forward slashes from the ID
+
+$ sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' my_file.adoc

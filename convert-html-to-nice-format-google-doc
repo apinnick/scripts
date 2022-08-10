@@ -1,0 +1,32 @@
+#!/bin/bash
+# html2googledoc
+# Avital Pinnick
+# June 24, 2018
+#
+# IMPORTANT: This script requires you to have installed the 'Links' text-based web browser for the
+# actual conversion. The output opens in Atom. You can change this if you don't use Atom.
+#
+# This script converts your html-based doc preview to a text form that is easier to
+# copy to Google docs if you need to create a version for comments. Run this command
+# from the main directory of your document. It adds the current date to output.
+
+now=$(date +"%b_%d_%Y_%I:%M")
+user=apinnick
+
+# path to the current html build of your document. Change accordingly.
+html=build/tmp/en-US/html-single/index.html
+
+# path for the output.
+output=/home/$user/Desktop/2googledoc_$now.txt
+
+touch $output
+echo Date: $now > $output
+
+# Call to Links browser to convert html to text:
+links -dump $html >> $output
+
+# comment out if you don't want to open file in Atom
+# I like to open it so that it's ready to copy into Google doc
+atom $output &
+
+exit

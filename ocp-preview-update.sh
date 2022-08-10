@@ -1,0 +1,5 @@
+#!/bin/bash
+# Avital Pinnick, Aug 2022
+# One-line command to build OCP preview and upload without opening in browser
+
+asciibinder && BRANCH=$(git branch --show-current) && rsync -avz --progress _preview/openshift-enterprise/$BRANCH/*   apinnick@file.tlv.redhat.com:~/public_html/$BRANCH

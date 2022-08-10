@@ -1,4 +1,6 @@
-# scripts
-Bash scripts
+# Scripts and useful commands
 
-- *[asciidoc-build-upload-open.sh](https://github.com/apinnick/scripts/blob/main/asciidoc-build-upload-open.sh)*: Builds Asciidoc preview for RHV docs, uploads to remote drive, opens preview in browser. You can adapt this script for other projects by tweaking the paths for folders in your project (images, common).
+- [asciidoc-build-upload-open.sh](https://github.com/apinnick/scripts/blob/main/asciidoc-build-upload-open.sh): Builds Asciidoc preview for RHV docs, uploads to remote drive, opens preview in browser. You can adapt this script for other projects by tweaking the paths for folders in your project (images, common).
+- [runbook-conversion.sh](https://github.com/apinnick/scripts/blob/main/runbook-conversion.sh): Converts Markdown files to Asciidoc with Kramdoc and updates the files with comments and formatting for OpenShift modules. Also generates a list of "include" files to copy/paste to assembly.
+- [ocp-preview-upload-open.txt](https://github.com/apinnick/scripts/blob/main/ocp-preview-upload-open.txt): One-line command that builds OpenShift preview, uploads to remote drive, and opens the preview in a browser. Copy/paste to command line, substituting your Kerberos ID and geo. You do not have to create a directory in the remote drive first. Works for updating existing preview as well as for first upload.
+- [ocp-preview-update.txt](https://github.com/apinnick/scripts/blob/main/ocp-preview-update.txt): One-line command that builds OpenShift preview and upload to remote drive, but does not open the preview in a browser. Useful for updating a preview build.

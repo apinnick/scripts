@@ -11,13 +11,12 @@
 # from the main directory of your document. It adds the current date to output.
 
 now=$(date +"%b_%d_%Y_%I:%M")
-user=apinnick
 
 # path to the current html build of your document. Change accordingly.
 html=build/tmp/en-US/html-single/index.html
 
 # path for the output.
-output=/home/$user/Desktop/2googledoc_$now.txt
+output=~/Desktop/2googledoc_$now.txt
 
 touch $output
 echo Date: $now > $output

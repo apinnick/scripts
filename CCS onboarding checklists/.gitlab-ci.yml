@@ -1,0 +1,57 @@
+build_a:
+  stage: build
+  tags:
+    - docker
+  image:
+    name: ruby:2.6
+  script:
+    - gem install bundler
+    - gem install asciidoctor
+    - build_tools/build_html.sh
+  artifacts:
+    paths:
+      - html_files
+  only:
+    - main
+
+build_b:
+  stage: build
+  needs: [build_a]
+  tags:
+    - docker
+  image:
+    name: pandoc/latex
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - rm -fr docx_files/*
+    - cd html_files
+    - pwd
+    - find . -name "*.html*" | while read i; do pandoc -f html -t docx "$i" -o "${i%.*}.docx"; done
+    - ls -la
+    - find . -name '*.docx' -exec mv {} ../docx_files \;
+    - ls -la ../docx_files
+  artifacts:
+    paths:
+      - docx_files
+  only:
+    - main
+
+pages:
+  stage: deploy
+  tags:
+    - docker
+  image:
+    name: ruby:2.6
+  script:
+    - gem install bundler
+    - bundle config set --local path 'vendor'
+    - bundle install
+    - bundle update
+    - rm -rf public
+    - build_tools/build_index.sh
+    - bundle exec jekyll build -d public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

@@ -72,9 +72,6 @@ for d in */ ; do
   rsync -rvq --exclude=docinfo.xml ../openshift-docs/drupal-build/openshift-enterprise/${d} ${d}
 done
 
-# apinnick: Aug 31, 2022
-# Changes to OpenShift sync script for Kathryn Alexander
-
 # Writing upstream modules to downstream master files. Hard-coding this because we do not know
 # where they will end up in the master.adoc file.
 
@@ -91,7 +88,7 @@ echo -e "\nAdding inclusive language module to 'master.adoc' files."
 # Checks for "include" line in master.adoc files so that the line is not
 # added if a Drupal build problem prevents the master.adoc files from being generated correctly.
 # Otherwise, the duplicate lines are written to the master.adoc file.
-MASTER=`find -name 'master.adoc'`
+MASTER=$(find -name 'master.adoc')
 
 for m in $MASTER; do
   if ! grep -q "making-open-source-more-inclusive" $m; then

@@ -94,7 +94,7 @@ find -name master.adoc | xargs -o sed -i -e "0,/^include/s//include::includes\/m
 echo -e "- Removing 'legal-notice' from 'welcome/master.adoc'.\n"
 
 # Remove legal notice from welcome/master.adoc
-sed -i 's/include::legal-notice.adoc\[leveloffset=+1\]//' welcome/master.adoc
+sed -i '/include::legal-notice.adoc\[leveloffset=+1\]/d' welcome/master.adoc
 
 # next add the changes
 git add -A 

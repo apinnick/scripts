@@ -19,4 +19,4 @@
 
 ## Miscellaneous
 - [sed-anchor-ids](https://github.com/apinnick/scripts/blob/main/sed-anchor-ids): Couple sed commands to add anchor IDs to an Asciidoc file.
-- [openshift-sync-tweaks.sh](https://github.com/apinnick/scripts/blob/main/openshift-sync-tweaks.sh): Adds Customer Portal-specific content (inclusive language module, DDF) to downstream master.adoc files during sync process and performs other cleanup tasks. My changes start at [line 75](https://github.com/apinnick/scripts/blob/2790321dfb1c556f147f387c6e6b844819d803ce/openshift-sync-tweaks.sh#L75).
+- [openshift-sync.sh](https://github.com/apinnick/scripts/blob/main/openshift-sync-tweaks.sh): Adds Customer Portal-specific content (inclusive language module, DDF) to downstream master.adoc files during sync process and performs other cleanup tasks. My changes start at [line 75](https://github.com/apinnick/scripts/blob/2790321dfb1c556f147f387c6e6b844819d803ce/openshift-sync-tweaks.sh#L75).

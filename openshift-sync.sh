@@ -72,36 +72,29 @@ for d in */ ; do
   rsync -rvq --exclude=docinfo.xml ../openshift-docs/drupal-build/openshift-enterprise/${d} ${d}
 done
 
-# Writing upstream modules to downstream master files. Hard-coding this because we do not know
-# where they will end up in the master.adoc file.
+# Housekeeping for downstream docs: Adding inclusive language module to all guides, removing legal notice from Welcome
+echo -e "\nAdditional housekeeping for Customer Portal:"
+echo "- Copying inclusive language module from upstream to downstream."
 
-# Copies upstream module to downstream "tmp" folder
-rsync -v ../openshift-docs/modules/making-open-source-more-inclusive.adoc tmp/
+# Copy upstream inclusive language module to downstream "*/includes" directories
+if [ -e ../openshift-docs/modules/making-open-source-more-inclusive.adoc ]; then
+  find */includes -type d -exec cp ../openshift-docs/modules/making-open-source-more-inclusive.adoc {} \;
+fi
 
-# copies tmp/module.adoc to all "*/includes" folders
-find */includes -type d -exec cp tmp/making-open-source-more-inclusive.adoc {} \;
+echo "- Stripping existing inclusive language module 'includes'."
 
-rm -rf tmp
+# Strip existing inclusive language module "includes" to avoid duplication
+find -name *.adoc | xargs -o sed -i -e "/^include.*making-open-source-more-inclusive.*/d"
 
-echo -e "\nAdding inclusive language module to 'master.adoc' files."
+echo "- Adding inclusive language module 'include' to all master.adoc files."
 
-# Checks for "include" line in master.adoc files so that the line is not
-# added if a Drupal build problem prevents the master.adoc files from being generated correctly.
-# Otherwise, the duplicate lines are written to the master.adoc file.
-MASTER=$(find -name 'master.adoc')
+# Add inclusive language module "include" to master.adoc files as the first "include"
+find -name master.adoc | xargs -o sed -i -e "0,/^include/s//include::includes\/making-open-source-more-inclusive.adoc[leveloffset=+1]\n\n&/"
 
-for m in $MASTER; do
-  if ! grep -q "making-open-source-more-inclusive" $m; then
-    sed -i '0,/^include/s//include::includes\/making-open-source-more-inclusive.adoc[leveloffset=+1]\n\n&/' $m
-  else
-    echo -e "$m was not updated because the inclusive language module is already included.\nWARNING This might indicate a problem with the Drupal build or rsync." && continue
-  fi
-done
+echo -e "- Removing 'legal-notice' from 'welcome/master.adoc'.\n"
 
-# Remove lines from welcome/master.adoc
-sed -i -e 's/include::oke_about.adoc\[leveloffset=+1\]//' -e 's/include::legal-notice.adoc\[leveloffset=+1\]//' welcome/master.adoc
-
-echo -e "\nRemoving 'oke_about' and 'legal-notice' from 'welcome/master.adoc'.\n"
+# Remove legal notice from welcome/master.adoc
+sed -i 's/include::legal-notice.adoc\[leveloffset=+1\]//' welcome/master.adoc
 
 # next add the changes
 git add -A 

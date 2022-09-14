@@ -63,8 +63,8 @@ echo "Build finished, cloning and syncing into portal repo"
 cd ..
 
 # no shallow clone here because pushing to shallow clones is problematic
-git clone "git@gitlab.cee.redhat.com:red-hat-enterprise-openshift-documentation/test-${version}.git" --branch stage --single-branch
-cd "test-${version}"
+git clone "git@gitlab.cee.redhat.com:red-hat-enterprise-openshift-documentation/${version}.git" --branch stage --single-branch
+cd "${version}"
 
 # now copy the content from the build earlier
 for d in */ ; do

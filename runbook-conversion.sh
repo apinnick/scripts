@@ -39,8 +39,8 @@ for o in $OUTPUT/*.adoc; do
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
 # Change kubectl to oc
   sed -i 's/kubectl/oc/g' $o
-# # Change kubevirt to CNV unless it's a URL or in backticks - in progress
-#   sed -i 's/[^/`][Kk]ubevirt/\{VirtProductName\}/g' $o
+# Change kubevirt to u/s unless it is in backticks or a YAML file
+  sed -i 's/\([^`:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
 # Change Kubevirt CR to HyperConverged CR
   sed -i 's/KubeVirt CR/`HyperConverged` custom resource/g' $o
 # Remove upstream content

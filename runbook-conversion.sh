@@ -31,7 +31,7 @@ for o in $OUTPUT/*.adoc; do
 # Add module comments and first anchor ID to beginning of module
   sed -i "1s|^|$MOD_COMMENT\n\[id=\"$(basename $o| sed 's/.adoc//g')_{context}\"\]\n|" $o
 # Fix code block syntax
-  sed -i 's/\[,bash\]/\[source,terminal\]/g; s/\[,yaml\]/\[source,yaml\]/g' $o
+  sed -i 's/\[,bash\]/\[source,terminal\]/g; s/\[,yaml\]/\[source,yaml\]/g; s/\[,json\]/\[source,json\]/g' $o
 # Add discrete tag to level 2 and 3 headers. Level 4 already discrete.
   sed -i '/^=/s/^\(=\{2,3\} \).*/\[discrete\]\n&/' $o
 # Add anchor ids to level 2+ headers.

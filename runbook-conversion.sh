@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, June 2022
+# Avital Pinnick, Nov 2022
 # Script to convert upstream Kubevirt runbooks to downstream modules
 
 # real source folder
@@ -40,15 +40,15 @@ for o in $OUTPUT/*.adoc; do
 # Change kubectl to oc
   sed -i 's/kubectl/oc/g' $o
 # Change kubevirt to u/s unless it is in backticks or a YAML file
-  sed -i 's/\([^`:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
+  sed -i 's/\([^:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
 # Change Kubevirt CR to HyperConverged CR
-  sed -i 's/KubeVirt CR/`HyperConverged` custom resource/g' $o
+  # sed -i 's/KubeVirt CR/`HyperConverged` custom resource/g' $o
 # Remove upstream content
-  sed -i '/\/\/ KVstart/,/\/\/ KVend/c\\' $o
+  sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment downstream content
-  sed -i 's/\/\/ CNV: //' $o
+  sed -i 's/\/\/ DS: //' $o
 # Clean up artifacts
-  sed -i 's/ +//g' $o
+  sed -i 's/ +//g; s/  $ /$ /g' $o
 done
 
 #Remove double line breaks

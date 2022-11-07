@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, Nov 2022
+# Avital Pinnick, June 2022
 # Script to convert upstream Kubevirt runbooks to downstream modules
 
 # real source folder
@@ -37,15 +37,17 @@ for o in $OUTPUT/*.adoc; do
 # Add anchor ids to level 2+ headers.
   sed -i '/^=/s/^\(=\{2,\} \).*/[id\=\"&\"]\n&/; /^\[id\=\"/s/"=\{2,\} /"/' $o
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
-# Change kubectl to oc
+# Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
-# Change kubevirt to u/s unless it is in backticks or a YAML file
+# Change markup of "Example"/"Example output"
+  sed -i 's/^Example\:/.Example/g; s/^Example output\:/.Example output/g' $o
+# Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
-# Change Kubevirt CR to HyperConverged CR
-  # sed -i 's/KubeVirt CR/`HyperConverged` custom resource/g' $o
-# Remove upstream content
+# Replace OpenShift Virt with doc attribute
+  sed -i 's/OpenShift Virtualization/\{VirtProductName\}/g' $o
+# Remove content surrounded by US comments
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
-# Uncomment downstream content
+# Uncomment content in DS comments
   sed -i 's/\/\/ DS: //' $o
 # Clean up artifacts
   sed -i 's/ +//g; s/  $ /$ /g' $o

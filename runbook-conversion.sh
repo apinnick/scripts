@@ -39,8 +39,8 @@ for o in $OUTPUT/*.adoc; do
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
 # Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
-# Change markup of "Example"/"Example output"
-  sed -i 's/^Example\:/.Example/g; s/^Example output\:/.Example output/g' $o
+# Change markup of "Example"/"Example output" header
+  sed -i 's/^\(Example.*\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
 # Replace OpenShift Virt with doc attribute

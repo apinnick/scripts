@@ -1,11 +1,11 @@
 #!/bin/bash
-# Avital Pinnick, June 2022
+# Avital Pinnick, Nov 2022
 # Script to convert upstream Kubevirt runbooks to downstream modules
 
 # real source folder
-# SOURCE="../monitoring/docs/runbooks"
+SOURCE="../monitoring/docs/runbooks"
 # test source folder
-SOURCE="runbooks"
+# SOURCE="runbooks"
 # Output folder, usually "modules"
 OUTPUT="output"
 # Update with your real assembly path/name for module comments:
@@ -15,10 +15,12 @@ MOD_PREFIX="virt-alert-"
 
 # Delete old runbook modules
 rm $OUTPUT/$MOD_PREFIX*.adoc &>/dev/null
+echo Deleting existing runbook modules
 
 # Convert markdown to asciidoc with kramdoc
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
+  echo Converting $s
 done
 
 # delete README if it exists
@@ -26,6 +28,7 @@ rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with FCC standards
 for o in $OUTPUT/*.adoc; do
+echo Generating $o
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -59,14 +62,38 @@ for o in $OUTPUT/*.adoc; do
 done
 
 # write "COPY-TO-ASSEMBLY.adoc" file with included modules
-cat << EOF > COPY-TO-ASSEMBLY.adoc
+cat << EOF > virt-virtualization-alerts.adoc
+:_content-type: ASSEMBLY
+[id="virt-virtualization-alerts"]
+= {VirtProductName} critical alerts
+include::_attributes/common-attributes.adoc[]
+:context: virt-virtualization-alerts
 
-This is an automatically generated list of included files for your assembly.
+toc::[]
+
+{VirtProductName} displays alerts in the web console that inform you when a problem occurs.
+
+Each alert has a runbook that describes the following:
+
+* Meaning of the alert
+* Impact of the alert on your system
+* Diagnosis of possible causes
+* Mitigation
 
 EOF
 
 for o in $OUTPUT/*.adoc; do
-  echo -e "include::$OUTPUT/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> COPY-TO-ASSEMBLY.adoc
+  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> virt-virtualization-alerts.adoc
 done
 
-echo "Done!"
+cat << EOF >> virt-virtualization-alerts.adoc
+[role="_additional-resources"]
+[id="additional-resources_virt-virtualization-alerts"]
+== Additional resources
+* xref:../../support/getting-support.adoc[Getting support]
+EOF
+
+echo ""
+echo "Review the generated assembly file: virt-virtualization-alerts.adoc"
+
+echo "Done"

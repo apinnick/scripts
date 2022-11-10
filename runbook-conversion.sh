@@ -1,34 +1,47 @@
 #!/bin/bash
-# Avital Pinnick, Nov 2022
-# Script to convert upstream Kubevirt runbooks to downstream modules
+# Avital Pinnick, November 2022
+# This script converts upstream markdown files to downstream Asciidoc files with Kramdoc. Then it cleans up the files and
+# adds metadata and formatting for OpenShift docs. It also generates a file with 'include::module' lines for the assembly.
+# It does not copy the files to your OpenShift docs repo because that is risky. You must do that.
+#
+# 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
+# 2. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
+# 3. Run the script: $ ./runbook-conversion.sh
+# 4. Delete ALL existing runbook modules from 'openshift-docs/modules'. This ensures that no retired runbooks remain.
+# 5. Copy generated runbook modules to 'openshift-docs/modules'.
+# 6. Copy 'include' lines from 'copy-to-assembly.adoc' file to the real assembly file.
 
-# real source folder
+# You can update these variables.
 SOURCE="../monitoring/docs/runbooks"
-# test source folder
 # SOURCE="runbooks"
-# Output folder, usually "modules"
-OUTPUT="output"
-# Update with your real assembly path/name for module comments:
-ASSEMBLY_NAME="virt/logging_events_monitoring/virt-virtualization-alerts.adoc"
-# Module file names will begin with this prefix:
-MOD_PREFIX="virt-alert-"
+# Real assembly path/name. This goes in module comments.
+ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
-# Delete old runbook modules
-rm $OUTPUT/$MOD_PREFIX*.adoc &>/dev/null
-echo Deleting existing runbook modules
+# You probably do not need to update these variables.
+# Module file prefix
+MOD_PREFIX="virt-runbooks-"
+OUTPUT="runbook-tmp"
+ASSEMBLY_FILE="copy-to-assembly.adoc"
+
+# Delete runbook modules in temporary folder, if any
+rm $OUTPUT/*.adoc &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
+echo "Converting files into Asciidoc with Kramdoc:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
-  echo Converting $s
+  echo "$s"
 done
 
 # delete README if it exists
 rm $OUTPUT/*README.adoc &>/dev/null
+echo ""
 
-# Clean up modules so that they comply with FCC standards
+# Clean up modules so that they comply with our style guides.
+echo "Cleaning Asciidoc files for downstream:"
+
 for o in $OUTPUT/*.adoc; do
-echo Generating $o
+echo "- $o"
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -61,39 +74,17 @@ for o in $OUTPUT/*.adoc; do
   sed -i 's/\n\n/\n/g' $o
 done
 
-# write "COPY-TO-ASSEMBLY.adoc" file with included modules
-cat << EOF > virt-virtualization-alerts.adoc
-:_content-type: ASSEMBLY
-[id="virt-virtualization-alerts"]
-= {VirtProductName} critical alerts
-include::_attributes/common-attributes.adoc[]
-:context: virt-virtualization-alerts
-
-toc::[]
-
-{VirtProductName} displays alerts in the web console that inform you when a problem occurs.
-
-Each alert has a runbook that describes the following:
-
-* Meaning of the alert
-* Impact of the alert on your system
-* Diagnosis of possible causes
-* Mitigation
+# Generate temporary file with included modules
+echo ""
+echo "Generating '$ASSEMBLY_FILE' file. Copy the 'include' lines from the '$ASSEMBLY_FILE' file into the real assembly file."
+cat << EOF > $ASSEMBLY_FILE
+Copy the following lines into the assembly file.
 
 EOF
 
 for o in $OUTPUT/*.adoc; do
-  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> virt-virtualization-alerts.adoc
+  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
 done
 
-cat << EOF >> virt-virtualization-alerts.adoc
-[role="_additional-resources"]
-[id="additional-resources_virt-virtualization-alerts"]
-== Additional resources
-* xref:../../support/getting-support.adoc[Getting support]
-EOF
-
 echo ""
-echo "Review the generated assembly file: virt-virtualization-alerts.adoc"
-
 echo "Done"

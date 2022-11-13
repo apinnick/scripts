@@ -1,9 +1,10 @@
 #!/bin/bash
-# Avital Pinnick, November 2022
+# Avital Pinnick, November 13 2022
 # This script converts upstream markdown files to downstream Asciidoc files with Kramdoc. Then it cleans up the files and
 # adds metadata and formatting for OpenShift docs. It also generates a file with 'include::module' lines for the assembly.
 # It does not copy the files to your OpenShift docs repo because that is risky. You must do that.
-#
+
+# How to use this script:
 # 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
 # 2. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
 # 3. Run the script: $ ./runbook-conversion.sh
@@ -12,15 +13,15 @@
 # 6. Copy 'include' lines from 'copy-to-assembly.adoc' file to the real assembly file.
 
 # You can update these variables.
-SOURCE="../monitoring/docs/runbooks"
-# SOURCE="runbooks"
+# SOURCE="../monitoring/docs/runbooks"
+SOURCE="debug"
 # Real assembly path/name. This goes in module comments.
 ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
 # You probably do not need to update these variables.
 # Module file prefix
 MOD_PREFIX="virt-runbooks-"
-OUTPUT="runbook-tmp"
+OUTPUT="converted-runbooks"
 ASSEMBLY_FILE="copy-to-assembly.adoc"
 
 # Delete runbook modules in temporary folder, if any
@@ -58,15 +59,16 @@ echo "- $o"
 # Change markup of "Example"/"Example output" header
   sed -i 's/^\(Example.*\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
-  sed -i 's/\([^:]\) KubeVirt/\1 \{VirtProductName\}/g' $o
+  sed -i 's/\([^:]\) KubeVirt /\1 {VirtProductName} /g' $o
 # Replace OpenShift Virt with doc attribute
-  sed -i 's/OpenShift Virtualization/\{VirtProductName\}/g' $o
+  sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
+  sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o
+# Clean up artifacts
+  sed -i 's/ +$//g' $o
 # Remove content surrounded by US comments
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment content in DS comments
   sed -i 's/\/\/ DS: //' $o
-# Clean up artifacts
-  sed -i 's/ +//g; s/  $ /$ /g' $o
 done
 
 #Remove double line breaks

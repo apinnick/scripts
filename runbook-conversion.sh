@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, November 13 2022
+# Avital Pinnick, November 2022
 # This script converts upstream markdown files to downstream Asciidoc files with Kramdoc. Then it cleans up the files and
 # adds metadata and formatting for OpenShift docs. It also generates a file with 'include::module' lines for the assembly.
 # It does not copy the files to your OpenShift docs repo because that is risky. You must do that.
@@ -13,8 +13,8 @@
 # 6. Copy 'include' lines from 'copy-to-assembly.adoc' file to the real assembly file.
 
 # You can update these variables.
-# SOURCE="../monitoring/docs/runbooks"
-SOURCE="debug"
+SOURCE="../monitoring/docs/runbooks"
+# SOURCE="debug"
 # Real assembly path/name. This goes in module comments.
 ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
@@ -31,7 +31,7 @@ rm $OUTPUT/*.adoc &>/dev/null
 echo "Converting files into Asciidoc with Kramdoc:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
-  echo "$s"
+  echo "Converting $s"
 done
 
 # delete README if it exists
@@ -42,7 +42,7 @@ echo ""
 echo "Cleaning Asciidoc files for downstream:"
 
 for o in $OUTPUT/*.adoc; do
-echo "- $o"
+echo "Cleaning up $o"
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -59,7 +59,7 @@ echo "- $o"
 # Change markup of "Example"/"Example output" header
   sed -i 's/^\(Example.*\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
-  sed -i 's/\([^:]\) KubeVirt /\1 {VirtProductName} /g' $o
+  sed -i 's/\([^:=] \)KubeVirt/\1 {VirtProductName}/g; s/^KubeVirt/{VirtProductName}/g' $o
 # Replace OpenShift Virt with doc attribute
   sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
   sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o

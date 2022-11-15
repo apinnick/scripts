@@ -1,21 +1,24 @@
 #!/bin/bash
 # Avital Pinnick, November 2022
-# This script converts upstream markdown files to downstream Asciidoc files with Kramdoc. Then it cleans up the files and
-# adds metadata and formatting for OpenShift docs. It also generates a file with 'include::module' lines for the assembly.
-# It does not copy the files to your OpenShift docs repo because that is risky. You must do that.
-
+# This script does the following:
+#   - Converts upstream markdown files to downstream Asciidoc files with Kramdoc
+#   - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
+#   - Generates a file with 'include::module' lines to copy to the assembly
+# This script does NOT copy the files to your OpenShift docs repo because that could be risky.
+#
 # How to use this script:
 # 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
-# 2. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
-# 3. Run the script: $ ./runbook-conversion.sh
-# 4. Delete ALL existing runbook modules from 'openshift-docs/modules'. This ensures that no retired runbooks remain.
-# 5. Copy generated runbook modules to 'openshift-docs/modules'.
-# 6. Copy 'include' lines from 'copy-to-assembly.adoc' file to the real assembly file.
+# 2. Save this script in a separate directory and make sure it is executable: '$ chmod +x runbook-conversion.sh'
+# 3. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
+# 4. Run '$ ./runbook-conversion.sh'
+# 5. DELETE ALL runbook modules from 'openshift-docs/modules' to ensure that obsolete runbooks do not remain in the repo.
+# 6. Copy files from '/converted runbooks' to 'openshift-docs/modules'.
+# 7. Copy 'include::' lines from 'copy-to-assembly.adoc' file to the real assembly file.
 
 # You can update these variables.
 SOURCE="../monitoring/docs/runbooks"
 # SOURCE="debug"
-# Real assembly path/name. This goes in module comments.
+# Real assembly path/name for the module comment: // Module included in the following assemblies:
 ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
 # You probably do not need to update these variables.
@@ -24,7 +27,7 @@ MOD_PREFIX="virt-runbooks-"
 OUTPUT="converted-runbooks"
 ASSEMBLY_FILE="copy-to-assembly.adoc"
 
-# Delete runbook modules in temporary folder, if any
+# Delete existing converted runbook files, if any
 rm $OUTPUT/*.adoc &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
@@ -36,13 +39,13 @@ done
 
 # delete README if it exists
 rm $OUTPUT/*README.adoc &>/dev/null
-echo ""
+echo -e "\nRemoving README from output\n"
 
 # Clean up modules so that they comply with our style guides.
 echo "Cleaning Asciidoc files for downstream:"
 
 for o in $OUTPUT/*.adoc; do
-echo "Cleaning up $o"
+echo "  > $o"
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -77,10 +80,10 @@ for o in $OUTPUT/*.adoc; do
 done
 
 # Generate temporary file with included modules
-echo ""
-echo "Generating '$ASSEMBLY_FILE' file. Copy the 'include' lines from the '$ASSEMBLY_FILE' file into the real assembly file."
+
+echo -e "\nGenerating '$ASSEMBLY_FILE' file.\nCopy the 'include' lines from the '$ASSEMBLY_FILE' file into the real assembly file.\n"
 cat << EOF > $ASSEMBLY_FILE
-Copy the following lines into the assembly file.
+Copy the following lines into the assembly file:
 
 EOF
 
@@ -88,5 +91,4 @@ for o in $OUTPUT/*.adoc; do
   echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
 done
 
-echo ""
 echo "Done"

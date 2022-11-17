@@ -1,5 +1,6 @@
 #!/bin/bash
-# Avital Pinnick, November 2022
+
+# Avital Pinnick, November 17, 2022
 # This script does the following:
 #   - Converts upstream markdown files to downstream Asciidoc files with Kramdoc
 #   - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
@@ -28,24 +29,24 @@ OUTPUT="converted-runbooks"
 ASSEMBLY_FILE="copy-to-assembly.adoc"
 
 # Delete existing converted runbook files, if any
-rm $OUTPUT/*.adoc &>/dev/null
+rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
+rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
 echo "Converting files into Asciidoc with Kramdoc:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
-  echo "Converting $s"
+  echo "Source: $s"
 done
 
 # delete README if it exists
 rm $OUTPUT/*README.adoc &>/dev/null
-echo -e "\nRemoving README from output\n"
 
 # Clean up modules so that they comply with our style guides.
 echo "Cleaning Asciidoc files for downstream:"
 
 for o in $OUTPUT/*.adoc; do
-echo "  > $o"
+echo "Target: $o"
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -72,23 +73,18 @@ echo "  > $o"
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment content in DS comments
   sed -i 's/\/\/ DS: //' $o
+# Write 'include::' lines to temporary file
+  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
 done
 
 #Remove double line breaks
 for o in $OUTPUT/*.adoc; do
-  sed -i 's/\n\n/\n/g' $o
+  sed -i 's/\n\n\n/\n\n/g' $o
 done
 
-# Generate temporary file with included modules
+echo -e "\n\nWARNING: The following source files have not been edited:"
+grep -riL 'edited' $SOURCE/*.md
 
-echo -e "\nGenerating '$ASSEMBLY_FILE' file.\nCopy the 'include' lines from the '$ASSEMBLY_FILE' file into the real assembly file.\n"
-cat << EOF > $ASSEMBLY_FILE
-Copy the following lines into the assembly file:
+echo -e "\nGenerated '$ASSEMBLY_FILE' file with 'include::' lines for the real assembly file.\n"
 
-EOF
-
-for o in $OUTPUT/*.adoc; do
-  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
-done
-
-echo "Done"
+echo -e "\nDone"

@@ -2,11 +2,12 @@
 
 # Avital Pinnick, November 17, 2022
 # This script does the following:
-#   - Converts upstream markdown files to downstream Asciidoc files with Kramdoc
+#   - Converts upstream markdown files to downstream Asciidoc files with Kramdown
 #   - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
 #   - Generates a file with 'include::module' lines to copy to the assembly
 # This script does NOT copy the files to your OpenShift docs repo because that could be risky.
-#
+# *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
+
 # How to use this script:
 # 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
 # 2. Save this script in a separate directory and make sure it is executable: '$ chmod +x runbook-conversion.sh'
@@ -33,20 +34,20 @@ rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
 rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
-echo "Converting files into Asciidoc with Kramdoc:"
+echo -e "\n1. Converting files into Asciidoc with Kramdown:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
-  echo "Source: $s"
+  echo "$s"
 done
 
 # delete README if it exists
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo "Cleaning Asciidoc files for downstream:"
+echo -e "\n2. Processing Asciidoc files:"
 
 for o in $OUTPUT/*.adoc; do
-echo "Target: $o"
+echo "$o"
 # Comment lines and content-type attribute for each module
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Add module comments and first anchor ID to beginning of module
@@ -82,9 +83,9 @@ for o in $OUTPUT/*.adoc; do
   sed -i 's/\n\n\n/\n\n/g' $o
 done
 
-echo -e "\n\nWARNING: The following source files have not been edited:"
-grep -riL 'edited' $SOURCE/*.md
+echo -e "\n3. Generating '$ASSEMBLY_FILE' file with 'include::' lines to copy to the real assembly file."
 
-echo -e "\nGenerated '$ASSEMBLY_FILE' file with 'include::' lines for the real assembly file.\n"
+echo -e "\n4. Checking for unedited source files..."
+grep -riL '<!--' $SOURCE/*.md
 
-echo -e "\nDone"
+echo -e "\nDone\n"

@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# Avital Pinnick, November 17, 2022
+# Avital Pinnick, November 24, 2022
 # This script does the following:
 #   - Converts upstream markdown files to downstream Asciidoc files with Kramdown
 #   - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
@@ -25,7 +24,7 @@ ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
 # You probably do not need to update these variables.
 # Module file prefix
-MOD_PREFIX="virt-runbooks-"
+MOD_PREFIX="virt-runbook-"
 OUTPUT="converted-runbooks"
 ASSEMBLY_FILE="copy-to-assembly.adoc"
 
@@ -47,18 +46,22 @@ rm $OUTPUT/*README.adoc &>/dev/null
 echo -e "\n2. Processing Asciidoc files:"
 
 for o in $OUTPUT/*.adoc; do
-echo "$o"
+  echo "$o"
 # Add comment lines and content-type attribute
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Create first anchor ID
-  sed -i "1s|^|$MOD_COMMENT\n\[id=\"$(basename $o| sed 's/.adoc//g')_{context}\"\]\n|" $o
+  FILE_NAME=$(basename $o | sed "s/.adoc//g")
+  sed -i "1s|^|$MOD_COMMENT\n\[id=\"$FILE_NAME\_{context}\"\]\n|" $o
 # Fix code block syntax
   sed -i 's/\[,bash\]/\[source,terminal\]/g; s/\[,yaml\]/\[source,yaml\]/g; s/\[,json\]/\[source,json\]/g' $o
 # Add discrete tag to level 2 and 3 headers. Level 4 already discrete.
   sed -i '/^=/s/^\(=\{2,3\} \).*/\[discrete\]\n&/' $o
-# Add anchor ids to level 2+ headers.
+# Add anchor ids
   sed -i '/^=/s/^\(=\{2,\} \).*/[id\=\"&\"]\n&/; /^\[id\=\"/s/"=\{2,\} /"/' $o
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
+# Add runbook name to anchor ids so that they are unique
+  RUNBOOK=$(basename $o | sed "s/$MOD_PREFIX//g; s/.adoc//g")
+  sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\2/g" $o
 # Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
 # Change markup of "Example"/"Example output" to dot header
@@ -73,7 +76,7 @@ echo "$o"
 # Remove upstream content surrounded by US comments
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment downstream content
-  sed -i 's/\/\/ DS: //' $o
+  sed -i 's/\/\/ DS: //g' $o
 #Remove double line breaks
   sed -i 'N;/^\n$/!P;D' $o
 # Write 'include::' lines to temporary file

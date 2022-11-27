@@ -1,9 +1,9 @@
 #!/bin/bash
 # Avital Pinnick, November 24, 2022
 # This script does the following:
-#   - Converts upstream markdown files to downstream Asciidoc files with Kramdown
-#   - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
-#   - Generates a file with 'include::module' lines to copy to the assembly
+# - Converts upstream markdown files to downstream Asciidoc files with Kramdown
+# - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
+# - Generates a file with 'include::module' lines to copy to the assembly
 # This script does NOT copy the files to your OpenShift docs repo because that could be risky.
 # *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
 
@@ -33,7 +33,7 @@ rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
 rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
-echo -e "\n1. Converting source files into Asciidoc with Kramdown:"
+echo -e "\nConverting Markdown source files into Asciidoc with Kramdown:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
   echo "$s"
@@ -43,7 +43,7 @@ done
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo -e "\n2. Processing Asciidoc files:"
+echo -e "\nProcessing Asciidoc files:"
 
 for o in $OUTPUT/*.adoc; do
   echo "$o"
@@ -65,7 +65,8 @@ for o in $OUTPUT/*.adoc; do
 # Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
 # Change markup of "Example"/"Example output" to dot header
-  sed -i 's/^\(Example.*\):/.\1/g' $o
+  sed -i 's/^\(.*xample.*\):/.\1/g' $o
+# TODO: Fix problem with blank line required before yaml blocks. Also, need to add this to guidelines
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:=] \)KubeVirt/\1 {VirtProductName}/g; s/^KubeVirt/{VirtProductName}/g' $o
 # Replace "OpenShift Virtualization' text with doc attribute and fix article
@@ -83,20 +84,13 @@ for o in $OUTPUT/*.adoc; do
   echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
 done
 
-echo -e "\n3. Generating '$ASSEMBLY_FILE' file with 'include::' lines to copy to the real assembly file.\n"
+echo -e "\n*** Job summary ***\n"
 
-echo -e "*** Job summary ***\n"
-
-# Count files in source dir without including README file
-SOURCE_FILES=$(ls $SOURCE | wc -l)
-EXTRA=1
-SOURCE_TOTAL=`expr $SOURCE_FILES - $EXTRA`
-echo -e "Total source files: $SOURCE_TOTAL"
-
-echo -e "Total converted files: $(ls -1 $OUTPUT | wc -l)"
+echo -e "- Converted $(ls -1 $OUTPUT | wc -l) files."
+echo -e "- Generated '$ASSEMBLY_FILE' file with 'include::' lines to copy to the assembly file."
 
 # Search for source files with no comments
-echo -e "Unedited source files, if any:"
+echo -e "- Searching for unedited source files, if any."
 grep -riL '<!--' $SOURCE/*.md
 
 echo -e "\nDone\n"

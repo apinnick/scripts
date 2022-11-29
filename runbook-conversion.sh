@@ -66,8 +66,8 @@ for o in $OUTPUT/*.adoc; do
   sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\2/g" $o
 # Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
-# Change markup of "example ...:" to dot header. Be careful about ending a lead-in sentence with "example:".
-  sed -i 's/^\(.*xample.*\):/.\1/g' $o
+# Change markup of "Example output:" to dot header.
+  sed -i 's/^\(Example output\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:=] \)KubeVirt/\1 {VirtProductName}/g; s/^KubeVirt/{VirtProductName}/g' $o
 # Replace "OpenShift Virtualization' text with doc attribute and fix indefinite article
@@ -94,7 +94,7 @@ else
 fi
 
 echo -e "\n************"
-echo -e 'WARNING\nKramdown sometimes mangles YAML code blocks if the block is preceded by 2 or more lines of text. The only workaround at this point is to add a blank line before the YAML code block.\nCheck the following files for missing "+" or conversion problems:\n'
+echo -e 'WARNING\nKramdown sometimes mangles YAML code blocks if the block is preceded by 2 or more lines of text.\nThe only workaround at this point is to add a blank line before the YAML code block.\nCheck the following files for missing "+" or conversion problems:\n'
 grep -rl 'source,yaml' $OUTPUT/*.adoc
 grep -rl '```yaml' $OUTPUT/*.adoc
 echo -e "************"

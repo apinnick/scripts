@@ -1,13 +1,14 @@
 #!/bin/bash
-# Avital Pinnick, November 24, 2022
+# Avital Pinnick, November 29, 2022
 # This script does the following:
 # - Converts upstream markdown files to downstream Asciidoc files with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
 # - Generates a file with 'include::module' lines to copy to the assembly
-# This script does NOT copy the files to your OpenShift docs repo because that could be risky.
-# *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
+# - Checks for unedited source files and lists them
+# - Warns you about the YAML code block conversion bug
 
 # How to use this script:
+# *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
 # 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
 # 2. Save this script in a separate directory and make sure it is executable: '$ chmod +x runbook-conversion.sh'
 # 3. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
@@ -15,11 +16,12 @@
 # 5. DELETE ALL runbook modules from 'openshift-docs/modules' to ensure that obsolete runbooks do not remain in the repo.
 # 6. Copy files from '/converted runbooks' to 'openshift-docs/modules'.
 # 7. Copy 'include::' lines from 'copy-to-assembly.adoc' file to the real assembly file.
+# See https://docs.engineering.redhat.com/display/cnv/Alert+runbooks+preparation+and+publication for more info.
 
-# You can update these variables.
+# Set this to the correct path for your source files.
 SOURCE="../monitoring/docs/runbooks"
 # SOURCE="debug"
-# Real assembly path/name for the "Module included ..." comment.
+# Set the assembly path/name for the "Module included ..." comment.
 ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 
 # You probably do not need to update these variables.
@@ -33,7 +35,7 @@ rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
 rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
-echo -e "\nConverting Markdown source files into Asciidoc with Kramdown:"
+echo -e "\nConverting Markdown source files into Asciidoc with Kramdown\n"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
   echo "$s"
@@ -43,7 +45,7 @@ done
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo -e "\nProcessing Asciidoc files:"
+echo -e "\nProcessing Asciidoc files\n"
 
 for o in $OUTPUT/*.adoc; do
   echo "$o"
@@ -64,12 +66,11 @@ for o in $OUTPUT/*.adoc; do
   sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\2/g" $o
 # Replace kubectl with oc
   sed -i 's/kubectl/oc/g' $o
-# Change markup of "Example"/"Example output" to dot header
+# Change markup of "example ...:" to dot header. Be careful about ending a lead-in sentence with "example:".
   sed -i 's/^\(.*xample.*\):/.\1/g' $o
-# TODO: Fix problem with blank line required before yaml blocks. Also, need to add this to guidelines
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:=] \)KubeVirt/\1 {VirtProductName}/g; s/^KubeVirt/{VirtProductName}/g' $o
-# Replace "OpenShift Virtualization' text with doc attribute and fix article
+# Replace "OpenShift Virtualization' text with doc attribute and fix indefinite article
   sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
   sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o
 # Clean up artifacts
@@ -80,17 +81,24 @@ for o in $OUTPUT/*.adoc; do
   sed -i 's/\/\/ DS: //g' $o
 #Remove double line breaks
   sed -i 'N;/^\n$/!P;D' $o
-# Write 'include::' lines to temporary file
-  echo -e "include::modules/$(basename $o | sed "s/\/output//g")[leveloffset=+1]\n" >> $ASSEMBLY_FILE
+# Write 'include::' lines to temporary file to copy to assembly
+  echo -e "\ninclude::modules/$(basename $o)[leveloffset=+1]" >> $ASSEMBLY_FILE
 done
 
-echo -e "\n*** Job summary ***\n"
+# Search for source files with no comments.
+echo -e "\nChecking for unedited source files..."
+if grep -ril '<!--' $OUTPUT/*.adoc; then
+    echo Found
+else
+    echo None found
+fi
 
-echo -e "- Converted $(ls -1 $OUTPUT | wc -l) files."
-echo -e "- Generated '$ASSEMBLY_FILE' file with 'include::' lines to copy to the assembly file."
+echo -e "\n************"
+echo -e 'WARNING\nKramdown sometimes mangles YAML code blocks if the block is preceded by 2 or more lines of text. The only workaround at this point is to add a blank line before the YAML code block.\nCheck the following files for missing "+" or conversion problems:\n'
+grep -rl 'source,yaml' $OUTPUT/*.adoc
+grep -rl '```yaml' $OUTPUT/*.adoc
+echo -e "************"
 
-# Search for source files with no comments
-echo -e "- Searching for unedited source files, if any."
-grep -riL '<!--' $SOURCE/*.md
+echo -e "\n$(ls -1 $OUTPUT | wc -l) files converted.\n./$ASSEMBLY_FILE file generated with 'include::' lines to copy to the assembly file."
 
 echo -e "\nDone\n"

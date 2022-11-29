@@ -85,13 +85,9 @@ for o in $OUTPUT/*.adoc; do
   echo -e "\ninclude::modules/$(basename $o)[leveloffset=+1]" >> $ASSEMBLY_FILE
 done
 
-# Search for source files with no comments.
+# Search for unedited source files.
 echo -e "\nChecking for unedited source files..."
-if grep -ril '<!--' $OUTPUT/*.adoc; then
-    echo Found
-else
-    echo None found
-fi
+grep -riL "<!--.*edit" --exclude=README.md $SOURCE/*.md
 
 echo -e "\n************"
 echo -e 'WARNING\nKramdown sometimes mangles YAML code blocks if the block is preceded by 2 or more lines of text.\nThe only workaround at this point is to add a blank line before the YAML code block.\nCheck the following files for missing "+" or conversion problems:\n'

@@ -1,11 +1,10 @@
 #!/bin/bash
-# Avital Pinnick, November 29, 2022
+# Avital Pinnick, November 30, 2022
 # This script does the following:
 # - Converts upstream markdown files to downstream Asciidoc files with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
 # - Generates a file with 'include::module' lines to copy to the assembly
 # - Checks for unedited source files and lists them
-# - Warns you about the YAML code block conversion bug
 
 # How to use this script:
 # *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
@@ -35,7 +34,7 @@ rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
 rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
-echo -e "\nConverting Markdown source files into Asciidoc with Kramdown\n"
+echo -e "\nConverting Markdown source files into Asciidoc with Kramdown:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
   echo "$s"
@@ -45,7 +44,7 @@ done
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo -e "\nProcessing Asciidoc files\n"
+echo -e "\nProcessing Asciidoc files:"
 
 for o in $OUTPUT/*.adoc; do
   echo "$o"
@@ -70,14 +69,14 @@ for o in $OUTPUT/*.adoc; do
   sed -i 's/^\(Example output\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
   sed -i 's/\([^:=] \)KubeVirt/\1 {VirtProductName}/g; s/^KubeVirt/{VirtProductName}/g' $o
-# Replace "OpenShift Virtualization' text with doc attribute and fix indefinite article
+# Replace "OpenShift Virtualization' text with doc attribute, if necessary, and fix indefinite article
   sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
   sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o
 # Clean up artifacts
   sed -i 's/ +$//g' $o
-# Remove upstream content surrounded by US comments
+# Remove text surrounded by US comments
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
-# Uncomment downstream content
+# Uncomment DS comment
   sed -i 's/\/\/ DS: //g' $o
 #Remove double line breaks
   sed -i 'N;/^\n$/!P;D' $o
@@ -88,12 +87,6 @@ done
 # Search for unedited source files.
 echo -e "\nChecking for unedited source files..."
 grep -riL "<!--.*edit" --exclude=README.md $SOURCE/*.md
-
-echo -e "\n************"
-echo -e 'WARNING\nKramdown sometimes mangles YAML code blocks if the block is preceded by 2 or more lines of text.\nThe only workaround at this point is to add a blank line before the YAML code block.\nCheck the following files for missing "+" or conversion problems:\n'
-grep -rl 'source,yaml' $OUTPUT/*.adoc
-grep -rl '```yaml' $OUTPUT/*.adoc
-echo -e "************"
 
 echo -e "\n$(ls -1 $OUTPUT | wc -l) files converted.\n./$ASSEMBLY_FILE file generated with 'include::' lines to copy to the assembly file."
 

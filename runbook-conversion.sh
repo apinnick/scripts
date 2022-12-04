@@ -1,8 +1,8 @@
 #!/bin/bash
-# Avital Pinnick, November 30, 2022
+# Avital Pinnick, December 4, 2022
 # This script does the following:
-# - Converts upstream markdown files to downstream Asciidoc files with Kramdown
-# - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream modules
+# - Converts markdown files to Asciidoc with Kramdown
+# - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream OpenShift modules
 # - Generates a file with 'include::module' lines to copy to the assembly
 # - Checks for unedited source files and lists them
 
@@ -10,21 +10,22 @@
 # *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
 # 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
 # 2. Save this script in a separate directory and make sure it is executable: '$ chmod +x runbook-conversion.sh'
-# 3. Set the 'SOURCE' variable in this script to the correct path for the runbooks, relative to where you run this script.
-# 4. Run '$ ./runbook-conversion.sh'
-# 5. DELETE ALL runbook modules from 'openshift-docs/modules' to ensure that obsolete runbooks do not remain in the repo.
-# 6. Copy files from '/converted runbooks' to 'openshift-docs/modules'.
-# 7. Copy 'include::' lines from 'copy-to-assembly.adoc' file to the real assembly file.
+# 3. Run '$ ./runbook-conversion.sh path/to/source_files'.
+# 4. DELETE ALL runbook modules from 'openshift-docs/modules' to ensure that obsolete runbooks do not remain in the repo.
+# 5. Copy files from '/converted runbooks' to 'openshift-docs/modules'.
+# 6. Copy 'include::' lines from 'copy-to-assembly.adoc' file to the real assembly file.
 # See https://docs.engineering.redhat.com/display/cnv/Alert+runbooks+preparation+and+publication for more info.
 
-# Set this to the correct path for your source files.
-SOURCE="../monitoring/docs/runbooks"
-# SOURCE="debug"
-# Set the assembly path/name for the "Module included ..." comment.
-ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
+if [ -z "$1" ];
+then
+  printf 'No source directory specified.\nUsage: $ ./runbook-conversion.sh path/to/source_files\n\nExiting...\n\n'
+  exit 2
+fi
 
-# You probably do not need to update these variables.
-# Module file prefix
+SOURCE=$1
+
+# Assembly path/name for the "Module included in ..." comment.
+ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 MOD_PREFIX="virt-runbook-"
 OUTPUT="converted-runbooks"
 ASSEMBLY_FILE="copy-to-assembly.adoc"
@@ -72,8 +73,6 @@ for o in $OUTPUT/*.adoc; do
 # Replace "OpenShift Virtualization' text with doc attribute, if necessary, and fix indefinite article
   sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
   sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o
-# Clean up artifacts
-  sed -i 's/ +$//g' $o
 # Remove text surrounded by US comments
   sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment DS comment

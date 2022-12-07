@@ -85,7 +85,11 @@ done
 
 # Search for unedited source files.
 echo -e "\nChecking for unedited source files..."
-grep -riL "<!--.*edit" --exclude=README.md $SOURCE/*.md
+if [ $(grep -riL "<!--.*edit" $SOURCE/*.md) ]
+  then echo Found: $(grep -riL "<!--.*edit" $SOURCE/*.md)
+  else echo "None found"
+fi
+
 
 echo -e "\nTotal files converted: $(ls -1 $OUTPUT | wc -l)\nGenerated file: ./$ASSEMBLY_FILE. Copy the 'include::' lines from this file to the assembly file."
 

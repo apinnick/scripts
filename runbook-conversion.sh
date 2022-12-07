@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, December 4, 2022
+# Avital Pinnick, December 7, 2022
 # This script does the following:
 # - Converts markdown files to Asciidoc with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream OpenShift modules
@@ -35,26 +35,26 @@ rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
 rm $ASSEMBLY_FILE &>/dev/null
 
 # Convert markdown to asciidoc with kramdoc
-echo -e "\nConverting Markdown source files into Asciidoc with Kramdown:"
+echo -e "\nConverting Markdown files in '$SOURCE' with Kramdown-Asciidoc:"
 for s in $SOURCE/*.md; do
   kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
-  echo "$s"
+  echo -e "- $(basename $s)"
 done
 
 # delete README if it exists
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo -e "\nProcessing Asciidoc files:"
+echo -e "\nProcessing Asciidoc files in './$OUTPUT':"
 
 for o in $OUTPUT/*.adoc; do
-  echo "$o"
+  echo "- $o"
 # Add comment lines and content-type attribute
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Create first anchor ID
   FILE_NAME=$(basename $o | sed "s/.adoc//g")
   sed -i "1s|^|$MOD_COMMENT\n\[id=\"$FILE_NAME\_{context}\"\]\n|" $o
-# Fix code block syntax
+# Fix code block syntax. TODO: Add console, txt
   sed -i 's/\[,bash\]/\[source,terminal\]/g; s/\[,yaml\]/\[source,yaml\]/g; s/\[,json\]/\[source,json\]/g' $o
 # Add discrete tag to level 2 and 3 headers. Level 4 already discrete.
   sed -i '/^=/s/^\(=\{2,3\} \).*/\[discrete\]\n&/' $o
@@ -87,6 +87,6 @@ done
 echo -e "\nChecking for unedited source files..."
 grep -riL "<!--.*edit" --exclude=README.md $SOURCE/*.md
 
-echo -e "\n$(ls -1 $OUTPUT | wc -l) files converted.\n./$ASSEMBLY_FILE file generated with 'include::' lines to copy to the assembly file."
+echo -e "\nTotal files converted: $(ls -1 $OUTPUT | wc -l)\nGenerated file: ./$ASSEMBLY_FILE. Copy the 'include::' lines from this file to the assembly file."
 
 echo -e "\nDone\n"

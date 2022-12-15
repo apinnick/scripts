@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, December 7, 2022
+# Avital Pinnick, December 15, 2022
 # This script does the following:
 # - Converts markdown files to Asciidoc with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream OpenShift modules
@@ -28,7 +28,7 @@ SOURCE=$1
 ASSEMBLY_NAME="virt/logging_events_monitoring/virt-runbooks.adoc"
 MOD_PREFIX="virt-runbook-"
 OUTPUT="converted-runbooks"
-ASSEMBLY_FILE="copy-to-assembly.adoc"
+ASSEMBLY_FILE="copy-to-assembly.txt"
 
 # Delete existing converted runbook files, if any
 rm -r $OUTPUT &>/dev/null && mkdir $OUTPUT
@@ -37,7 +37,7 @@ rm $ASSEMBLY_FILE &>/dev/null
 # Convert markdown to asciidoc with kramdoc
 echo -e "\nConverting Markdown files in '$SOURCE' with Kramdown-Asciidoc:"
 for s in $SOURCE/*.md; do
-  kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g').adoc
+  kramdoc $s --output=$OUTPUT/$MOD_PREFIX$(basename $s | sed 's/.md//g; s/.*/\L&/').adoc
   echo -e "- $(basename $s)"
 done
 
@@ -45,17 +45,18 @@ done
 rm $OUTPUT/*README.adoc &>/dev/null
 
 # Clean up modules so that they comply with our style guides.
-echo -e "\nProcessing Asciidoc files in './$OUTPUT':"
+echo -e "\nProcessing Asciidoc files in '$OUTPUT':"
 
 for o in $OUTPUT/*.adoc; do
-  echo "- $o"
+  echo "- $(basename $o)"
 # Add comment lines and content-type attribute
   MOD_COMMENT="\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 # Create first anchor ID
   FILE_NAME=$(basename $o | sed "s/.adoc//g")
   sed -i "1s|^|$MOD_COMMENT\n\[id=\"$FILE_NAME\_{context}\"\]\n|" $o
-# Fix code block syntax. TODO: Add console, txt
-  sed -i 's/\[,bash\]/\[source,terminal\]/g; s/\[,yaml\]/\[source,yaml\]/g; s/\[,json\]/\[source,json\]/g' $o
+# Fix code block syntax.
+  sed -i 's/,bash\|,console/source,terminal/g' $o
+  sed -i 's/\(,text\|,yaml\|,json\]\)/source\1/g' $o
 # Add discrete tag to level 2 and 3 headers. Level 4 already discrete.
   sed -i '/^=/s/^\(=\{2,3\} \).*/\[discrete\]\n&/' $o
 # Add anchor ids
@@ -63,9 +64,9 @@ for o in $OUTPUT/*.adoc; do
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
 # Add runbook name to anchor ids so that they are unique
   RUNBOOK=$(basename $o | sed "s/$MOD_PREFIX//g; s/.adoc//g")
-  sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\2/g" $o
+  sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\_{context}\2/g" $o
 # Replace kubectl with oc
-  sed -i 's/kubectl/oc/g' $o
+  # sed -i 's/kubectl/oc/g' $o
 # Change markup of "Example output:" to dot header.
   sed -i 's/^\(Example output\):/.\1/g' $o
 # Replace KubeVirt with DS doc attribute unless it is in backticks or a YAML file
@@ -74,22 +75,17 @@ for o in $OUTPUT/*.adoc; do
   sed -i 's/OpenShift Virtualization/{VirtProductName}/g' $o
   sed -i 's/a {VirtProductName}/an {VirtProductName}/g' $o
 # Remove text surrounded by US comments
-  sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
+  # sed -i '/\/\/ USstart/,/\/\/ USend/c\\' $o
 # Uncomment DS comment
-  sed -i 's/\/\/ DS: //g' $o
+  # sed -i 's/\/\/ DS: //g' $o
+# Fix hyperlinks. Kramdown does not insert 'link:' tag
+  sed -i 's/https.*\[/link:&/' $o
 #Remove double line breaks
   sed -i 'N;/^\n$/!P;D' $o
 # Write 'include::' lines to temporary file to copy to assembly
   echo -e "\ninclude::modules/$(basename $o)[leveloffset=+1]" >> $ASSEMBLY_FILE
 done
 
-# Search for unedited source files.
-echo -e "\nChecking for unedited source files."
-if [ $(grep -riL "<!--.*edit" $SOURCE/*.md) ]
-  then echo Found: $(basename $(grep -riL "<!--.*edit" $SOURCE/*.md))
-  else echo "None found."
-fi
-
-echo -e "\nTotal files converted: $(ls -1 $OUTPUT | wc -l)\nGenerated file: ./$ASSEMBLY_FILE. Copy the 'include::' lines from this file to the assembly file."
-
+echo -e "\nTotal files converted: $(ls -1 $OUTPUT | wc -l)\n"
+echo -e "Generated files:\n- $ASSEMBLY_FILE. Copy the 'include::' lines from this file to the assembly file."
 echo -e "\nDone\n"

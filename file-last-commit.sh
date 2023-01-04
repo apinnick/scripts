@@ -22,11 +22,12 @@ LAST_COMMIT=file-last-commit.txt
 
 echo -e "Last Git commit for $TOTAL files containing '$STRING' in $DIR:\n" > $LAST_COMMIT
 
-for file in $DIR/*$STRING*.adoc; do
+for file in $DIR/*$STRING*; do
+  if [ ! -d "$file" ]; then
     echo -e $(basename $file) >> $LAST_COMMIT
-    # '-n' sets the number of commits to display.
     git -C "$DIR" log -n 1 --date=short --pretty=format:"%cr: %cn %cd, %h %s %n" $(basename $file) >> $LAST_COMMIT
     echo "" >> $LAST_COMMIT
+  fi
 done
 
 echo -e "\nGenerated './$LAST_COMMIT' with last commit for $TOTAL files containing '$STRING' in '$DIR'."

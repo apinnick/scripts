@@ -17,7 +17,7 @@ fi
 
 DIR=$1
 STRING=$2
-TOTAL=$(ls -1 $DIR/*$STRING* | wc -l)
+TOTAL=$(ls -l $DIR/*$STRING* | grep 'adoc\|md' | wc -l )
 LAST_COMMIT=file-last-commit.txt
 
 echo -e "Last Git commit for $TOTAL files containing '$STRING' in $DIR:\n" > $LAST_COMMIT

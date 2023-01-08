@@ -35,6 +35,4 @@ for file in $DIR/*$STRING*; do
   fi
 done
 
-# tr -d \\n $LAST_COMMIT
-
 echo -e "\nGenerated './$LAST_COMMIT'.\nDone\n"

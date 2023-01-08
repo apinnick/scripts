@@ -19,7 +19,6 @@ fi
 
 DIR=$1
 STRING=$2
-TOTAL=$(ls -l $DIR/*$STRING* | grep 'adoc\|md' | wc -l )
 LAST_COMMIT=last-commit.csv
 
 rm $LAST_COMMIT  &>/dev/null

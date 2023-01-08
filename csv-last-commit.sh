@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, December 29, 2022
+# Avital Pinnick, Jan. 8, 2023
 # This script generates a CSV file showing the last commit date for files.
 # Useful for identifying files that might be abandoned or obsolete.
 # This script is not recursive. It only searches the specified directory.

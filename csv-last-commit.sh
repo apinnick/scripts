@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, Jan. 8, 2023
+# Avital Pinnick, Jan. 10, 2023
 # This script generates a CSV file showing the last commit date for files.
 # Useful for identifying files that might be abandoned or obsolete.
 # This script is not recursive. It only searches the specified directory.
@@ -20,10 +20,11 @@ fi
 DIR=$1
 STRING=$2
 LAST_COMMIT=last-commit.csv
+TOTAL=$(ls -l $DIR/*$STRING* | grep 'adoc\|md' | wc -l )
 
 rm $LAST_COMMIT  &>/dev/null
 
-# echo -e "Last Git commit for $TOTAL files containing '$STRING' in $DIR:\n" > $LAST_COMMIT
+echo -e "\nGenerating './$LAST_COMMIT' with last Git commit for $TOTAL files in $DIR."
 
 echo "File,Date,Name,Hash,Message" > $LAST_COMMIT
 
@@ -34,4 +35,4 @@ for file in $DIR/*$STRING*; do
   fi
 done
 
-echo -e "\nGenerated './$LAST_COMMIT'.\nDone\n"
+echo -e "Done\n"

@@ -20,7 +20,7 @@ fi
 DIR=$1
 STRING=$2
 TOTAL=$(ls -l $DIR/*$STRING* | grep 'adoc\|md' | wc -l )
-LAST_COMMIT=file-last-commit.txt
+LAST_COMMIT=last-commit.txt
 
 echo -e "\nGenerating './$LAST_COMMIT' with last Git commit for $TOTAL files in $DIR."
 

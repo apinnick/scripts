@@ -24,5 +24,5 @@ sed -i '/^$/d' $NEW_LIST
 # Sort list alphabetically
 sort -o $NEW_LIST{,}
 
-echo -e "\nGenerated ./$NEW_LIST"
+echo -e "\nGenerated ./$NEW_LIST with $(cat $NEW_LIST | wc -l) lines"
 echo -e "Done\n"

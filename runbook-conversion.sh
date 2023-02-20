@@ -1,10 +1,11 @@
 #!/bin/bash
-# Avital Pinnick, December 28, 2022
+# Avital Pinnick, February 20, 2023
 # This script does the following:
 # - Converts markdown files to Asciidoc with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream OpenShift modules
 # - Generates a file with 'include::module' lines to copy to the assembly
 # - Checks for unedited source files and lists them
+# Note: "_{context}" has been removed from all anchor IDs and first anchor ID contains caps. See CNV-14380.
 
 # How to use this script:
 # *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
@@ -52,9 +53,8 @@ echo -e "\nProcessing Asciidoc files in '$OUTPUT':"
 
 for o in $OUTPUT/*.adoc; do
   echo "- $(basename $o)"
-# Create first anchor ID
-  FILE_NAME=$(basename $o | sed "s/.adoc//g")
-  sed -i "1s|^|$MOD_COMMENT\n\[id=\"$FILE_NAME\_{context}\"\]\n|" $o
+# Write comment block to beginning of module
+  sed -i "1s|^|$MOD_COMMENT\n|" $o
 # Fix code block syntax.
   sed -i 's/,bash\|,console/source,terminal/g' $o
   sed -i 's/\(,text\|,yaml\|,json\]\)/source\1/g' $o
@@ -65,7 +65,7 @@ for o in $OUTPUT/*.adoc; do
   sed -i '/^\[id="/s/ /-/g; /^\[id="/s/.*/\L&/; /^\[id="/s/[/`()]//g; /^\[id="/s/\./_/g' $o
 # Add runbook name to anchor ids so that they are unique
   RUNBOOK=$(basename $o | sed "s/$MOD_PREFIX//g; s/.adoc//g")
-  sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\_{context}\2/g" $o
+  sed -i "s/\([a-z]\)\(\"\]\)$/\1-$RUNBOOK\2/g" $o
 # Replace kubectl with oc
   # sed -i 's/kubectl/oc/g' $o
 # Change markup of "Example output:" to dot header.
@@ -81,6 +81,8 @@ for o in $OUTPUT/*.adoc; do
   # sed -i 's/\/\/ DS: //g' $o
 # Fix hyperlinks. Kramdown does not insert 'link:' tag
   sed -i 's/https.*\[/link:&/' $o
+# Create first anchor ID
+  sed -i "/^= /s/^\(= \).*/[id\=\"&\"]\n&/; /^\[id\=\"/s/\"=\{1,\} /\"$MOD_PREFIX/" $o
 #Remove double line breaks
   sed -i 'N;/^\n$/!P;D' $o
 # Write 'include::' lines to temporary file to copy to assembly

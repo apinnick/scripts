@@ -8,8 +8,8 @@
 # Note: "_{context}" has been removed from all anchor IDs and first anchor ID contains caps. See CNV-14380.
 
 # How to use this script:
-# *** Prerequisite: You must install Kramdown: "$ gem install kramdown"
-# 1. Fork and clone https://github.com/kubevirt/monitoring and check out 'main'.
+# *** Prerequisite: You must install Kramdown-Asciidoc: https://github.com/asciidoctor/kramdown-asciidoc
+# 1. Fork and clone https://github.com/openshift/runbooks and check out 'master'.
 # 2. Save this script in a separate directory and make sure it is executable: '$ chmod +x runbook-conversion.sh'
 # 3. Run '$ ./runbook-conversion.sh path/to/source_files'.
 # 4. DELETE ALL runbook modules from 'openshift-docs/modules' to ensure that obsolete runbooks do not remain in the repo.

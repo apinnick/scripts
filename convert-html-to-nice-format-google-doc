@@ -26,6 +26,6 @@ links -dump $html >> $output
 
 # comment out if you don't want to open file in Atom
 # I like to open it so that it's ready to copy into Google doc
-atom $output &
+# atom $output &
 
 exit

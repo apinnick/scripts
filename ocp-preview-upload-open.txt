@@ -3,4 +3,4 @@
 # One line script to build OpenShift preview, upload to remote drive, and open preview in browser
 # Update username and geo
 
-asciibinder && BRANCH=$(git branch --show-current) && rsync -avz --progress _preview/openshift-enterprise/$BRANCH/*  apinnick@file.tlv.redhat.com:~/public_html/$BRANCH && xdg-open http://file.tlv.redhat.com/apinnick/$BRANCH/welcome
+asciibinder && BRANCH=$(git branch --show-current) && rsync -avz --progress _preview/openshift-enterprise/$BRANCH/*  apinnick@file.tlv.redhat.com:~/public_html/$BRANCH && xdg-open 'http://file.tlv.redhat.com/apinnick/$BRANCH/welcome'

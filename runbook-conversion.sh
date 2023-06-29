@@ -26,7 +26,7 @@ fi
 SOURCE=$1
 
 # Module variables
-ASSEMBLY_NAME="virt/support/virt-runbooks.adoc"
+ASSEMBLY_NAME="virt/monitoring/virt-runbooks.adoc"
 MOD_PREFIX="virt-runbook-"
 MOD_COMMENT="\/\/ Do not edit this module. It is generated with a script.\n\/\/ Do not reuse this module. The anchor IDs do not contain a context statement.\n\/\/ Module included in the following assemblies:\n\/\/\n\/\/ * $ASSEMBLY_NAME\n\n:_content-type: REFERENCE"
 

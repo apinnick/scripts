@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, February 21, 2023
+# Avital Pinnick, October 24, 2023
 # This script does the following:
 # - Converts markdown files to Asciidoc with Kramdown
 # - Cleans up the Asciidoc files, adds metadata, and converts terms for downstream OpenShift modules
@@ -81,6 +81,8 @@ for o in $OUTPUT/*.adoc; do
   # sed -i 's/\/\/ DS: //g' $o
 # Fix hyperlinks. Kramdown does not insert 'link:' tag
   sed -i 's/https.*\[/link:&/' $o
+# Fix menu arrows. Kramdown inserts a backslash.
+  sed -i 's/\\->/->/' $o
 # Create first anchor ID
   sed -i "/^= /s/^\(= \).*/[id\=\"&\"]\n&/; /^\[id\=\"/s/\"=\{1,\} /\"$MOD_PREFIX/" $o
 #Remove double line breaks

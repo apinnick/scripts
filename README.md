@@ -1,14 +1,23 @@
 # Scripts and useful commands
 
-## Git logs
+## Fix title case headers
 
-- [file-last-commit.sh](https://github.com/apinnick/scripts/blob/main/file-last-commit.sh) and [csv-last-commit.sh](https://github.com/apinnick/scripts/blob/main/csv-last-commit.sh) run a git log command on a set of files and output the results as a text file or CSV file, respectively. You can use these scripts to identify old files in a Git repo. See my [blog post](https://source.redhat.com/groups/public/ccs/ccs_blog/script_to_identify_old_content_in_git_repositories) for details.
+IN PROGRESS. Changes title case headers and captions to sentence case.
 
-- [git-exclude-log.sh](https://github.com/apinnick/scripts/blob/main/git-exclude-log.sh) checks files in a specific directory for commits made by people who are not part of a specific group, for example, technical writers. You can use this script to check for changes made by people outside the group.
+- [Script](Change%20title%20case%20headers%20to%20sentence%20case/title-case.sh)
+- [Exclusion list](Change%20title%20case%20headers%20to%20sentence%20case/exclude.txt)
+
+## Git last commit
+
+Identifies modules that have not been touched for a long time. Useful for doc audits.
+
+- [file-last-commit.sh](file-last-commit.sh) and [csv-last-commit.sh](https://github.com/apinnick/scripts/blob/main/csv-last-commit.sh) run a git log command on a set of files and output the results as a text file or CSV file, respectively. You can use these scripts to identify old files in a Git repo. See my [blog post](https://source.redhat.com/groups/public/ccs/ccs_blog/script_to_identify_old_content_in_git_repositories) for details.
+
+- [git-exclude-log.sh](git-exclude-log.sh) checks files in a specific directory for commits made by people who are not part of a specific group, for example, technical writers. You can use this script to check for changes made by people outside the group.
 
 ## Preview builds
 
-- [asciidoc-build-upload-open.sh](https://github.com/apinnick/scripts/blob/main/asciidoc-build-upload-open.sh): Builds Asciidoc preview for RHV docs, uploads to remote drive, opens preview in browser. You can adapt this script for other projects by tweaking the paths for folders in your project (images, common).
+- [asciidoc-build-upload-open.sh](asciidoc-build-upload-open.sh): Builds Asciidoc preview for RHV docs, uploads to remote drive, opens preview in browser. You can adapt this script for other projects by tweaking the paths for folders in your project (images, common).
 
 - [ocp-preview-upload-open.txt](https://github.com/apinnick/scripts/blob/main/ocp-preview-upload-open.txt): One-line command that builds OpenShift preview, uploads to remote drive, and opens the preview in a browser. Copy/paste to command line, substituting your Kerberos ID and geo. You do not have to create a directory in the remote drive first. Works for updating existing preview as well as for first upload.
 

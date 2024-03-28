@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Avital Pinnick, March 25, 2024
+# Avital Pinnick, March 28, 2024
 # Script to change "title case" headers and captions to "sentence case".
-
 # I recommend trying this on a small number of files in case the results are unexpected.
+
 # How to use this script:
 if [ -z "$1" ];
 then
@@ -25,7 +25,8 @@ HEADERS='/^=/s/\([A-Za-z0-9}]\) \([A-Z][a-z]\)/\1 \L\2/g;/^=/s/\([A-Za-z0-9}]\)-
 CAPTIONS='/^\.[A-Za-z0-9}]/s/\([A-Za-z0-9}]\) \([A-Z][a-z]\)/\1 \L\2/g;/^\.[A-Za-z0-9}]/s/\([A-Za-z0-9}]\)-\([A-Z][a-z]\)/\1-\L\2/g'
 
 # Single names that you want to exclude are defined in "exclude.txt".
-# The first letter of the name must be lower case: "ansible","iPv6", etc.
+# The "exclude.txt" file is mapped to the EXCLUDE array.
+mapfile -t EXCLUDE < <(sed 's/^\([A-Za-z]\)/\l\1/g' exclude.txt)
 
 # Compound names that you want to exclude are defined in "complex_lc" array and replaced by "complex_uc" array.
 # This solution is not very pretty, so I might try to find something better.
@@ -40,10 +41,6 @@ complex_uc=("CentOS Stream" "Salt Minion" "Amazon Web Service" "Azure Resource M
 for file in $DIR$STRING; do
   sed -i -e "$HEADERS" $file
   sed -i -e "$CAPTIONS" $file
-
-  # "Exclude" list: This line maps the "exclude.txt" file to the EXCLUDE array.
-  mapfile -t EXCLUDE < exclude.txt
-
   # Fix names on the "exclude.txt" list
   for name in ${EXCLUDE[@]}; do
     sed -i -e "/^=/s/\b\($name\)/\u\0/g;/^\.[A-Za-z0-9}]/s/\b\($name\)/\u\0/g" $file

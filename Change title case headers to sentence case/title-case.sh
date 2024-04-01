@@ -18,9 +18,6 @@ fi
 DIR=$1
 STRING=$2
 
-echo $DIR
-echo $STRING
-
 # Changes single and hyphenated words in headers to sentence case.
 # Examples: "= My Header" to "= My header","= My Sub-Section" to "= My sub-section"
 HEADERS='/^=/s/\([A-Za-z0-9}]\) \([A-Z][a-z]\)/\1 \L\2/g;/^=/s/\([A-Za-z0-9}]\)-\([A-Z][a-z]\)/\1-\L\2/g'
@@ -29,7 +26,7 @@ HEADERS='/^=/s/\([A-Za-z0-9}]\) \([A-Z][a-z]\)/\1 \L\2/g;/^=/s/\([A-Za-z0-9}]\)-
 # Examples: ".My Caption" to ".My caption",".My Sub-Section" to ".My sub-section"
 CAPTIONS='/^\.[A-Za-z0-9}]/s/\([A-Za-z0-9}]\) \([A-Z][a-z]\)/\1 \L\2/g;/^\.[A-Za-z0-9}]/s/\([A-Za-z0-9}]\)-\([A-Z][a-z]\)/\1-\L\2/g'
 
-# Excluding terms:
+# Excluded terms
 
 # Single-word names are defined in "exclude.txt". The first letter of the name must be lower case: "ansible","iPv6", etc.
 # The "exclude.txt" file is mapped to the EXCLUDE array.

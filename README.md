@@ -1,11 +1,8 @@
 # Scripts and useful commands
 
-## Change title case headers to sentence case
+## Title case conversion script
 
-IN PROGRESS.
-
-- [title-case.sh](Change%20title%20case%20headers%20to%20sentence%20case/title-case.sh) changes title case headers and captions to sentence case.
-- [exclude.txt](Change%20title%20case%20headers%20to%20sentence%20case/exclude.txt) excludes terms that should be capitalized.
+- The [title case conversion script](title-case-script/README.md) changes title case headers and captions to sentence case.
 
 ## Git last commit
 

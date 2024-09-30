@@ -1,6 +1,8 @@
 #!/bin/bash
 # Avital Pinnick, Sept. 30, 2024
-# This script counts the number of steps in a group of modules. Then, it outputs the file names and number of steps to a text file.
+# This script counts the number of steps in a group of modules.
+# If the number of steps exceeds a certain number, the script outputs the file name and the number of steps and substeps to a text file.
+#
 # Usage: ./find-long-procedures.sh <directory> <string>
 
 if [ -z "$1" ];
@@ -29,11 +31,13 @@ MAX_STEPS=10
 
 rm long-procedures.txt &>/dev/null
 
+echo -e "Files in $DIR with more than $MAX_STEPS steps\n" > long-procedures.txt
+
 for file in $DIR/*$STRING*.adoc; do
-  # grep -E '^\.{1,3} [A-Z]' $file | wc -l
-  steps="$(grep -E '^\.{1,3} [A-Z]' $file | wc -l)"
+  steps="$(grep -E '^\. [A-Z]' $file | wc -l)"
+  substeps="$(grep -E '^\.. [A-Z]' $file | wc -l)"
   filename="$(basename $file)"
   if (("$steps" >= "$MAX_STEPS")); then
-  echo - $filename has $steps steps >> long-procedures.txt
+  echo - $filename: $steps steps, $substeps substeps >> long-procedures.txt
   fi
 done

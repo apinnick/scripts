@@ -1,17 +1,17 @@
 #!/bin/bash
-# Avital Pinnick, Sept. 30, 2024
+# Avital Pinnick, Oct. 1, 2024
 # This script counts the number of steps in a group of modules.
-# If the number of steps exceeds a certain number, the script outputs the file name and the number of steps and substeps to a text file.
-#
+# If the number of steps exceeds a certain number, the script outputs the directory,file name, # of steps and # of substeps to a CSV file.
 # Usage: ./find-long-procedures.sh <directory> <string>
 
 if [ -z "$1" ];
 then
   printf '
-Usage: $ ./find-long-procedures.sh </directory> OPT:<file_name_string>.
+Usage: $ ./find-long-procedures.sh </directory> OPT:<file_name_string>
 Examples:
   * All files in specified directory: "$ ./find-long-procedures.sh ../openshift-docs/virt/install"
   * File names starting with "proc_a" in specified directory: "$ ./find-long-procedures.sh ../openshift-docs/modules proc_a*"
+    NOTE: You must leave a space between the directory and the file name string.
 
 Exiting...\n\n'
   exit 2
@@ -29,15 +29,20 @@ STRING=$2
 # Max number of steps to search for
 MAX_STEPS=10
 
-rm long-procedures.txt &>/dev/null
+output="long-procedures.csv"
 
-echo -e "Files in $DIR with more than $MAX_STEPS steps\n" > long-procedures.txt
+rm $output &>/dev/null
+
+echo "Directory,File,# steps,# substeps" > $output
 
 for file in $DIR/*$STRING*.adoc; do
   steps="$(grep -E '^\. [A-Z]' $file | wc -l)"
   substeps="$(grep -E '^\.. [A-Z]' $file | wc -l)"
   filename="$(basename $file)"
   if (("$steps" >= "$MAX_STEPS")); then
-  echo - $filename: $steps steps, $substeps substeps >> long-procedures.txt
+  echo -e ${DIR#../},$filename,$steps,$substeps >> $output
+  i=$((i+1))
   fi
 done
+
+echo -e "\nDone. '$output' contains $i files."

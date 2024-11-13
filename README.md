@@ -6,7 +6,7 @@
 
 ## Title case conversion script
 
-- The [title case conversion script](title-case-script/README.md) changes title case headers and captions to sentence case.
+- The [title case conversion script](title-case-script/README.md) changes title case headers and captions to sentence case. Update: You can create an exception list.
 
 ## Git last commit
 

@@ -1,6 +1,10 @@
 # Scripts and useful commands
 
-## Finding long procedures
+## Find level 2+ headers
+
+NEW: This [script](find-subheadings.sh) checks .adoc files in a specific directory for level 2 or higher headers. If files are found, the script creates an "Output.txt" file with a list. If no files are found, it displays a message.
+
+## Find long procedures
 
 - The [find-long-procedures script](find-long-procedures.sh) checks files in a specific directory for procedures that contain more than 10 steps (`10` is the default; you can change this value). The script outputs the directory name, file name, number of steps, and number of substeps to a CSV file.
 

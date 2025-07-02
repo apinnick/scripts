@@ -1,8 +1,12 @@
 # Scripts and useful commands
 
+## New: Extract modules for a single guide
+
+This [script](extract-doc-modules.sh) extracts modules from assemblies in a master.adoc file and outputs them as a text file. It can be used on an OpenShift docs assembly but I have not tested this thoroughly. It is designed to work with modules that use prefixes, such as 'proc_', but you can tweak it to search for "include::" lines if your modules do not follow this naming convention.
+
 ## Find level 2+ headers
 
-NEW: This [script](find-subheadings.sh) checks .adoc files in a specific directory for level 2 or higher headers. If files are found, the script creates an "Output.txt" file with a list. If no files are found, it displays a message.
+This [script](find-subheadings.sh) checks .adoc files in a specific directory for level 2 or higher headers. If files are found, the script creates an "Output.txt" file with a list. If no files are found, it displays a message.
 
 ## Find long procedures
 

@@ -42,19 +42,21 @@ done < "$FILE"
 # Module name cleanup.
 # Remove files that you don't want to check.
 sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
-# Remove leveloffsets and empty square brackets
+# Remove leveloffsets and empty square brackets.
 sed -i 's/\[.*\]$//' modules.tmp
-# Remove comments that contain module names
+# Remove comments.
 sed -i 's/\/\/.*//' modules.tmp
-# Sort module names
+# Sort module names.
 sort modules.tmp | uniq > module-list.txt
-# Remove blank lines
+# Remove blank lines.
 sed -i '/^$/d' module-list.txt
 
 rm *.tmp &>/dev/null
 
-# Optional. Add module path to module list: "sed -i 's|^|path/to/modules/|' module-list.txt"
-# Example: "sed -i 's|^|../foreman-documentation/guides/common/modules/|' module-list.txt"
+# You can insert the module path if you want to run a script on the files:
+# $ sed -i 's|^|path/to/modules/|' module-list.txt
+# Example: $ sed -i 's|^|../foreman-documentation/guides/common/modules/|' module-list.txt
 
-# Optional. Navigate to directory with Vale installed and run a Vale check on each file in the module list:
-# "$ while IFS= read -r filepath; do vale "$filepath"; done < /path/to/module-list.txt"
+# If you have Vale installed in a repo and you want to check only
+# the modules on the module list, run the following command within the repo:
+# $ while IFS= read -r filepath; do vale "$filepath"; done < /path/to/module-list.txt

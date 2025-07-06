@@ -4,6 +4,47 @@
 
 This [script](extract-doc-modules.sh) extracts modules from assemblies in a master.adoc file and outputs them as a text file. It can be used on an OpenShift docs assembly but I have not tested this thoroughly. It is designed to work with modules that use prefixes, such as 'proc_', but you can tweak it to search for "include::" lines if your modules do not follow this naming convention.
 
+### Running a Vale check on the module list
+
+You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list.
+
+1. Run the [extract-doc-modules](extract-doc-modules.sh) script to generate a module list for the _Configuring virt-who for virtual machine subscriptions_ guide:
+
+      ````
+      $ sh extract-doc-modules.sh guides/doc-Configuring_virt_who_VM_Subscriptions/master.adoc
+      ````
+
+      module-list.txt:
+
+      ````
+      con_configuring-virt-who-for-provider.adoc
+      con_troubleshooting-virt-who.adoc
+      con_virtual-machine-subscriptions-overview.adoc
+      proc_checking-for-subscriptions-that-require-virt-who.adoc
+      proc_checking-virt-who-status.adoc
+      ````
+
+2. Run the Vale check on the files listed in `module-list.txt`:
+
+      ````
+      $ while IFS= read -r filepath; do vale "$filepath"; done < module-list.txt
+      ````
+
+      Output:
+      ````
+      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+
+      proc_checking-virt-who-status.adoc
+      14:1  warning  Unsupported titles cannot be    AsciiDocDITA.TaskTitle
+                      mapped to DITA tasks.
+      14:1  warning  Block titles can only be        AsciiDocDITA.BlockTitle
+                      assigned to examples, figures,
+                      and tables in DITA.
+      ````
+
 ## Find level 2+ headers
 
 This [script](find-subheadings.sh) checks .adoc files in a specific directory for level 2 or higher headers. If files are found, the script creates an "Output.txt" file with a list. If no files are found, it displays a message.

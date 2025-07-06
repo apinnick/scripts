@@ -52,3 +52,9 @@ sort modules.tmp | uniq > module-list.txt
 sed -i '/^$/d' module-list.txt
 
 rm *.tmp &>/dev/null
+
+# Optional. Add module path to module list: "sed -i 's|^|path/to/modules/|' module-list.txt"
+# Example: "sed -i 's|^|../foreman-documentation/guides/common/modules/|' module-list.txt"
+
+# Optional. Navigate to directory with Vale installed and run a Vale check on each file in the module list:
+# "$ while IFS= read -r filepath; do vale "$filepath"; done < /path/to/module-list.txt"

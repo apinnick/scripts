@@ -1,0 +1,13 @@
+../foreman-documentation/guides/common/modules/con_configuring-virt-who-for-provider.adoc
+../foreman-documentation/guides/common/modules/con_troubleshooting-virt-who.adoc
+../foreman-documentation/guides/common/modules/con_virtual-machine-subscriptions-overview.adoc
+../foreman-documentation/guides/common/modules/proc_checking-for-subscriptions-that-require-virt-who.adoc
+../foreman-documentation/guides/common/modules/proc_checking-virt-who-status.adoc
+../foreman-documentation/guides/common/modules/proc_creating-a-virt-who-configuration.adoc
+../foreman-documentation/guides/common/modules/proc_deploying-a-virt-who-configuration-on-target-server.adoc
+../foreman-documentation/guides/common/modules/proc_editing-a-virt-who-configuration.adoc
+../foreman-documentation/guides/common/modules/proc_enabling-rhsm-debug-logging.adoc
+../foreman-documentation/guides/common/modules/proc_removing-a-virt-who-configuration.adoc
+../foreman-documentation/guides/common/modules/proc_virt-who-does-not-report-to-satellite.adoc
+../foreman-documentation/guides/common/modules/ref_troubleshooting-virt-who.adoc
+../foreman-documentation/guides/common/modules/ref_virt-who-configuration-overview.adoc

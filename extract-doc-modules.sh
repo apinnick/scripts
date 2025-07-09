@@ -116,11 +116,3 @@ else
 fi
 # Clean up temporary files.
 rm output_buffer *.tmp &>/dev/null
-
-# You can insert the module path if you want to run a script on the files:
-# $ sed -i 's|^|path/to/modules/|' $OUTPUT
-# Example: $ sed -i 's|^|../foreman-documentation/guides/common/modules/|' $OUTPUT
-
-# If you have Vale installed in a repo and you want to check only
-# the modules on the module list, run the following command within the repo:
-# $ while IFS= read -r filepath; do vale "$filepath"; done < /path/to/$OUTPUT

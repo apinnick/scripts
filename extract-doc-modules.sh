@@ -12,7 +12,6 @@ FILE=
 OUTPUT=
 REPO_PATH=.
 ASMB_DIR=common
-ASSEMBLY_PATH=$REPO_PATH/$ASMB_DIR
 
 print_help() {
     echo -e "Extract a list of modules from a master.adoc file"
@@ -69,6 +68,7 @@ while [ $# -gt 1 ]; do
     esac
 done
 FILE=$1
+ASSEMBLY_PATH=$REPO_PATH/$ASMB_DIR
 
 # Cleanup from a previous run
 rm -f assemblies.tmp assemblies.txt modules.tmp &>/dev/null

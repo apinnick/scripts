@@ -54,6 +54,15 @@ cat assembly.txt | xargs -I {} sh -c '
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
 
+# Check for block titles
+echo -e "**Block title (.text)**" >> $OUTPUT
+cat assembly.txt | xargs -I {} sh -c '
+  if grep -P "^\." "$1" > /dev/null; then
+    echo "- $1"
+  fi
+' _ {} >> "$OUTPUT"
+echo -e "\n_Done_\n" >> $OUTPUT
+
 # Module checks
 echo -e "## Module checks\n" >> $OUTPUT
 

@@ -83,4 +83,24 @@ cat module-list.txt | xargs -I {} sh -c '
   fi
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
+
+# Forbidden text block
+echo -e "**Forbidden text block**" >> $OUTPUT
+cat module-list.txt | xargs -I {} sh -c '
+  if grep -iP "^\.(?!Additional|Verification|Procedure|Troubleshooting|Next)" "$1"; then
+    echo "- $1"
+  fi
+' _ {} >> "$OUTPUT"
+echo -e "\n_Done_\n" >> $OUTPUT
+
+# More than one procedure block
+echo -e "**More than one procedure block**" >> $OUTPUT
+cat module-list.txt | xargs -I {} sh -c '
+  count=$(grep -P -c "^\.Procedure" "$1")
+  if [ "$count" -ge 2 ]; then
+    echo "- $1"
+  fi
+' _ {} >> "$OUTPUT"
+echo -e "\n_Done_\n" >> $OUTPUT
+
 echo "Done. CQA-report.md created."

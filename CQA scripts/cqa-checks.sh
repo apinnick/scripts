@@ -87,7 +87,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 # Forbidden text block
 echo -e "**Forbidden text block**" >> $OUTPUT
 cat module-list.txt | xargs -I {} sh -c '
-  if grep -iP "^\.(?!Additional|Verification|Procedure|Troubleshooting|Next)" "$1"; then
+  if grep -iPq "^\.(?! |Prerequisites|Procedure|Troubleshooting|Next|Additional|Verification)" "$1"; then
     echo "- $1"
   fi
 ' _ {} >> "$OUTPUT"
@@ -98,6 +98,15 @@ echo -e "**More than one procedure block**" >> $OUTPUT
 cat module-list.txt | xargs -I {} sh -c '
   count=$(grep -P -c "^\.Procedure" "$1")
   if [ "$count" -ge 2 ]; then
+    echo "- $1"
+  fi
+' _ {} >> "$OUTPUT"
+echo -e "\n_Done_\n" >> $OUTPUT
+
+# Procedure embellishment
+echo -e "**Procedure embellishment**\n" >> $OUTPUT
+cat module-list.txt | xargs -I {} sh -c '
+  if grep -P "^\.Procedure.+" "$1"; then
     echo "- $1"
   fi
 ' _ {} >> "$OUTPUT"

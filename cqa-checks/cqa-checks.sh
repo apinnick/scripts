@@ -47,9 +47,18 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # Admonition titles
 # [NOTE], [WARNING], etc., must not be followed by a block title.
-echo -e "**Admonition title**\n" >> $OUTPUT
+echo -e "**Admonition with title**\n" >> $OUTPUT
 cat assembly.txt module-list.txt | xargs -I {} sh -c '
   if grep -Pzo "(?s)\[[A-Z]+\]\n\.[A-Za-z].*" "$1" > /dev/null; then
+    echo "- $1"
+  fi
+' _ {} >> "$OUTPUT"
+echo -e "\n_Done_\n" >> $OUTPUT
+
+# Image without text description
+echo -e "**Image without text description**\n" >> $OUTPUT
+cat assembly.txt module-list.txt | xargs -I {} sh -c '
+  if grep -E "^image.*\[\]$" "$1" > /dev/null; then
     echo "- $1"
   fi
 ' _ {} >> "$OUTPUT"

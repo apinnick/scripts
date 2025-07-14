@@ -11,10 +11,11 @@
 FILE=
 OUTPUT=
 REPO_PATH=.
-ASMB_DIR=common
+ASMB_DIR=assemblies
 
 print_help() {
     echo -e "Extract a list of modules from a master.adoc file"
+    echo -e "List is written to stdout"
     echo
     echo -e "Usage:"
     echo -e "    $0 [OPTIONS ...] SOURCE_FILE"
@@ -24,26 +25,25 @@ print_help() {
     echo -e "Options:"
     echo -e "  --repo-path, -r"
     echo -e "               Path to a git repository"
-    echo -e "               Default: local dir"
+    echo -e "               Default: current dir"
     echo -e "  --assembly-dir, -a"
     echo -e "               Location of assemblies within the repository"
     echo -e "               Default: $ASMB_DIR"
-    echo -e "  --output-file, -o"
-    echo -e "               Write the list to a file"
-    echo -e "               Default: stdout"
     echo -e "  --help, -h   Print help and exit"
 }
 
 bye() {
-    echo -e ''
-    echo -e "$1"
-    echo -e 'Exiting ...'
-    echo -e ''
+    echo -e "$1" >&2
+    echo -e 'Exiting ...' >&2
     exit 1
 }
 
 # Process user arguments
-if [ $# -eq 0 ]; then print_help; exit 1; fi
+if [ $# -eq 0 ]; then print_help; exit 0; fi
+if [ "$1" = "-h" -o "$1" = "--help" ]; then
+    print_help; exit 0;
+else if [ $# -eq 1 ]; then bye "E: Invalid option: $1"; fi
+fi
 while [ $# -gt 1 ]; do
     case "$1" in
         --repo-path|-r)
@@ -53,14 +53,6 @@ while [ $# -gt 1 ]; do
         --assembly-dir|-a)
             ASMB_DIR="$2"
             shift 2
-            ;;
-        --output-file|-o)
-            OUTPUT="$2"
-            shift 2
-            ;;
-        --help|-h)
-            print_help
-            exit 0
             ;;
         *)
             bye "E: Invalid option: $1"
@@ -106,13 +98,8 @@ sed -i 's/\[.*\]$//' modules.tmp
 # Remove comments.
 sed -i 's/\/\/.*//' modules.tmp
 
-mkfifo output_buffer
 # Sort module names and remove blank lines.
-sort modules.tmp | uniq | grep -v '^$' >output_buffer &
-if [ -n "$OUTPUT" ]; then
-    cat output_buffer >$OUTPUT
-else
-    cat output_buffer >&1
-fi
+sort modules.tmp | uniq | grep -v '^$' >&1
+
 # Clean up temporary files.
-rm output_buffer *.tmp &>/dev/null
+rm *.tmp &>/dev/null

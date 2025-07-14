@@ -8,8 +8,6 @@
 # This pulls in all included files.
 # You can exclude unwanted files from the final module list with a sed command.
 
-FILE=
-OUTPUT=
 REPO_PATH=.
 ASMB_DIR=assemblies
 

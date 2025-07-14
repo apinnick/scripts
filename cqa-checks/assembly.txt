@@ -1,0 +1,1 @@
+../../foreman-documentation/guides/common/assembly_preparing-for-project-upgrade.adoc

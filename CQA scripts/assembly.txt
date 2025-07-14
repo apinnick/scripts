@@ -1,8 +1,0 @@
-../foreman-documentation/guides/common/assembly_configuring-virt-who-hyperv.adoc
-../foreman-documentation/guides/common/assembly_configuring-virt-who-kubevirt.adoc
-../foreman-documentation/guides/common/assembly_configuring-virt-who-kvm.adoc
-../foreman-documentation/guides/common/assembly_configuring-virt-who-nutanix.adoc
-../foreman-documentation/guides/common/assembly_configuring-virt-who-openstack.adoc
-../foreman-documentation/guides/common/assembly_configuring-virt-who-vmware.adoc
-../foreman-documentation/guides/common/assembly_overview-of-vm-subscriptions.adoc
-../foreman-documentation/guides/common/assembly_troubleshooting-virt-who.adoc

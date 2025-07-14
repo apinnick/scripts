@@ -8,7 +8,8 @@
 # This pulls in all included files.
 # You can exclude unwanted files from the final module list with a sed command.
 
-REPO_PATH=../foreman-documentation/guides
+# Using relative repo path for demos
+REPO_PATH=../../foreman-documentation/guides
 ASSEMBLY_PATH=$REPO_PATH/common
 FILE=$REPO_PATH/doc-Upgrading_Project_Disconnected/master.adoc
 
@@ -55,7 +56,7 @@ rm *.tmp &>/dev/null
 
 # You can insert the module path if you want to run a script on the files:
 # $ sed -i 's|^|path/to/modules/|' module-list.txt
-# Example: $ sed -i 's|^|../foreman-documentation/guides/common/modules/|' module-list.txt
+sed -i 's|^|../../foreman-documentation/guides/common/modules/|' module-list.txt
 
 # If you have Vale installed in a repo and you want to check only
 # the modules on the module list, run the following command within the repo:

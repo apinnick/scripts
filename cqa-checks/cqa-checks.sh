@@ -10,9 +10,9 @@ rm $OUTPUT &>/dev/null
 echo -e "# CQA report\n" > $OUTPUT
 echo -e "This report describes Content Quality Assessment issues found in Asciidoc assemblies and modules.\n" >> $OUTPUT
 
-# Check if assembly.txt exists
-if [[ ! -f "assembly.txt" ]]; then
-  echo "Error: assembly.txt not found!"
+# Check if assemblies.txt exists
+if [[ ! -f "assemblies.txt" ]]; then
+  echo "Error: assemblies.txt not found!"
   rm $OUTPUT &>/dev/null
   exit 1
 fi
@@ -32,7 +32,7 @@ echo -e "## File checks\n" >> $OUTPUT
 
 # Check for content type attribute
 echo -e "**Content type attribute missing**\n" >> $OUTPUT
-cat assembly.txt module-list.txt | xargs -I {} sh -c '
+cat assemblies.txt module-list.txt | xargs -I {} sh -c '
   # Check if the specific line *is* present in the file
   if grep -P "^:_mod-docs-content-type: " "$1" > /dev/null; then
     # If it *is* present, do nothing (or handle the "present" case)
@@ -46,7 +46,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # Anchor ID
 echo -e "**ID missing**\n" >> $OUTPUT
-cat assembly.txt module-list.txt | xargs -I {} sh -c '
+cat assemblies.txt module-list.txt | xargs -I {} sh -c '
   # Check if the specific line *is* present in the file
   if grep -P "^\[id.*\]" "$1" > /dev/null; then
     # If it *is* present, do nothing (or handle the "present" case)
@@ -60,7 +60,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # Long titles
 echo -e "**Header > 10 words found**\n" >> $OUTPUT
-cat assembly.txt module-list.txt | xargs -I {} sh -c '
+cat assemblies.txt module-list.txt | xargs -I {} sh -c '
     # Find lines starting with "= ", "== ", or "=== "
     grep -E "^={1,3} " "$1" | while IFS= read -r line; do
         # Remove the leading "={1,3} " and count the words
@@ -79,7 +79,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 # Admonition titles
 # [NOTE], [WARNING], etc., must not be followed by a block title.
 echo -e "**Admonition with title found**\n" >> $OUTPUT
-cat assembly.txt module-list.txt | xargs -I {} sh -c '
+cat assemblies.txt module-list.txt | xargs -I {} sh -c '
   if grep -Pzo "(?s)\[[A-Z]+\]\n\.[A-Za-z].*" "$1" > /dev/null; then
     echo "- $1"
   fi
@@ -88,7 +88,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # Image without text description
 echo -e "**Image without description found**\n" >> $OUTPUT
-cat assembly.txt module-list.txt | xargs -I {} sh -c '
+cat assemblies.txt module-list.txt | xargs -I {} sh -c '
   if grep -E "^image.*\[\]$" "$1" > /dev/null; then
     echo "- $1"
   fi
@@ -100,7 +100,7 @@ echo -e "\n## Assembly module checks\n" >> $OUTPUT
 
 # Check assembly for more than one title (= )
 echo -e "**More than one '= ' header found**\n" >> $OUTPUT
-cat assembly.txt | xargs -I {} sh -c '
+cat assemblies.txt | xargs -I {} sh -c '
   count=$(grep -P -c "^= [A-Za-z0-9]" "$1")
   if [ "$count" -ge 2 ]; then
     echo "- $1"
@@ -113,7 +113,7 @@ echo -e "**'=== ' header found**\n" >> $OUTPUT
 # Use xargs to process files in parallel (or sequentially if -P 1)
 # -P 0 uses as many processes as possible, or specify a number like -P 4
 # -I {} replaces {} with each argument
-cat assembly.txt | xargs -I {} sh -c '
+cat assemblies.txt | xargs -I {} sh -c '
   if grep -P "^=== [A-Z0-9].*" "$1" > /dev/null; then
     echo "- $1"
   fi
@@ -122,7 +122,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # Check for block titles
 echo -e "**Block title found**" >> $OUTPUT
-cat assembly.txt | xargs -I {} sh -c '
+cat assemblies.txt | xargs -I {} sh -c '
   if grep -P "^\." "$1" > /dev/null; then
     echo "- $1"
   fi

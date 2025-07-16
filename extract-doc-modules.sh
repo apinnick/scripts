@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, July 2, 2025
+# Avital Pinnick with many improvements from Lena Ansorgova
 # Extracts modules from a master.adoc file with assemblies
 # Can be used on an assembly, in theory, but I have not tested this thoroughly.
 

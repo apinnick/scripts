@@ -146,12 +146,9 @@ echo -e "\n_Done_\n" >> $OUTPUT
 # LONG PROCEDURE
 echo -e "**Procedure > 10 steps found**" >> $OUTPUT
 cat module-list.txt | xargs -I {} sh -c '
-  filepath="$1"
-  steps=$(grep -E "^\. [A-Z]" "$filepath" | wc -l)
-  filename=$(basename "$filepath")
+  steps=$(grep -E "^\. [A-Z]" "$1" | wc -l)
   if (( steps >= 10 )); then
-    echo "- $filename"
-    i=$((i+1))
+    echo "- $1"
   fi
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT

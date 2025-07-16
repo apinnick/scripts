@@ -70,9 +70,9 @@ while IFS= read -r line; do
     fi
 done < "$FILE"
 
-# If assemblies.tmp exists, add assembly path, sort, and output to assemblies.txt.
+# If assemblies.tmp exists, add assembly path, remove double '//', sort, and output to assemblies.txt.
 if [[ "assemblies.tmp" ]]; then
-    sed -i "s|^|$ASSEMBLY_PATH|g" assemblies.tmp
+    sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" assemblies.tmp
     sort assemblies.tmp | uniq > assemblies.txt
 fi
 

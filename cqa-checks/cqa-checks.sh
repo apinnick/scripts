@@ -211,11 +211,14 @@ echo -e "\n_Done_\n" >> $OUTPUT
 # Might have to split this.
 echo -e "**Impermissible block title found**\n" >> $OUTPUT
 echo -e "Block titles other than Prerequisites, Procedure, Troubleshooting, Next steps, Additional resources, Verification\n" >> $OUTPUT
-cat $MODULES | xargs -I {} sh -c '
-  if grep -iPq "^\.(?!\.{1,3}|\s[A-Z]|Prerequisites|Procedure|Troubleshooting|Next steps|Additional resources|Verification).*" "$1"; then
-    echo "- $1"
+cat "$MODULES" | xargs -I {} sh -c '
+  FILE="$1"
+  if grep -P "^:_mod-docs-content-type: PROCEDURE" "$1" > /dev/null; then
+    if grep -iPq "(?s)^\.(?!\.{1,3}|\s[A-Z]|Prerequisites|Procedure|Troubleshooting|Next steps|Additional resources|Verification).*" "$FILE"; then
+      echo "- $FILE"
+    fi
   fi
-' _ {} >> "$OUTPUT"
+' _ {} >> $OUTPUT
 echo -e "\n_Done_\n" >> $OUTPUT
 
 # More than one procedure

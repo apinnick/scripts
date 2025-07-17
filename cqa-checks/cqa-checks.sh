@@ -241,5 +241,33 @@ cat $MODULES | xargs -I {} sh -c '
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
 
+# CONCEPT MODULES
+echo -e "## Concept module checks\n" >> $OUTPUT
+
+echo "Running concept module checks"
+# Impermissible block title
+echo -e "**Impermissible block title found**\n" >> $OUTPUT
+echo -e "Concept modules can only contain 'Next steps' or 'Additional resources' as block titles.\nConsider replacing '.Title' with '== Title'.\n" >> $OUTPUT
+cat "$MODULES" | xargs -I {} sh -c '
+  FILE="$1"
+  if grep -P "^:_mod-docs-content-type: CONCEPT" "$1" > /dev/null; then
+    if grep -iPq "(?s)^\.(?!\.{1,3}|\s[A-Z]|Next steps|Additional resources).*" "$FILE"; then
+      echo "- $FILE"
+    fi
+  fi
+' _ {} >> $OUTPUT
+echo -e "\n_Done_\n" >> $OUTPUT
+
+# Concept with '=== ' header
+echo -e "**'=== ' header found**" >> $OUTPUT
+cat $MODULES | xargs -I {} sh -c '
+  if grep -P "^:_mod-docs-content-type: CONCEPT" "$1" > /dev/null; then
+    if grep -P "^=== [A-Z0-9a-z].*" "$1" > /dev/null; then
+    echo "- $1"
+    fi
+  fi
+' _ {} >> $OUTPUT
+echo -e "\n_Done_\n" >> $OUTPUT
+
 # END
 echo "Done. CQA-report.md created."

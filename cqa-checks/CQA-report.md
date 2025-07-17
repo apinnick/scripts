@@ -1,6 +1,6 @@
 # CQA report
 
-This report describes Content Quality Assessment issues found in Asciidoc assemblies and modules.
+This report describes Content Quality Assessment issues found in Asciidoc assemblies and modules in SOURCE_FILE (TBD).
 
 ## File checks
 
@@ -38,6 +38,12 @@ _Done_
 
 - ../foreman-documentation/guides/common/modules/ref_example-of-a-weekly-full-backup-followed-by-daily-incremental-backups.adoc
 - ../foreman-documentation/guides/common/modules/ref_managing-packages-on-the-base-operating-system.adoc
+
+_Done_
+
+**'= ' header not followed by blank line**
+
+- ../foreman-documentation/guides/common/modules/con_creating-and-managing-user-groups.adoc
 
 _Done_
 

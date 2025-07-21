@@ -32,8 +32,7 @@ echo -e Checking "$ASSEMBLIES" and "$MODULES"
 
 # File checks
 echo -e "## File checks\n" >> $OUTPUT
-
-echo "Running file checks"
+echo "Checking all files for general issues"
 
 # Check for content type attribute
 echo -e "**Content type attribute missing**\n" >> $OUTPUT
@@ -147,8 +146,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # ASSEMBLY CHECKS
 echo -e "\n## Assembly module checks\n" >> $OUTPUT
-
-echo "Running assembly checks"
+echo "Checking assemblies"
 
 # Check assembly for more than one title (= )
 echo -e "**More than one '= ' header found**\n" >> $OUTPUT
@@ -183,8 +181,7 @@ echo -e "\n_Done_\n" >> $OUTPUT
 
 # PROCEDURES
 echo -e "## Procedure module checks\n" >> $OUTPUT
-
-echo "Running procedure module checks"
+echo "Checking procedure modules"
 
 # Procedure with '== ' header
 echo -e "**'== ' header found**" >> $OUTPUT
@@ -207,10 +204,9 @@ cat $MODULES | xargs -I {} sh -c '
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
 
-# Impermissible block title
-# Might have to split this.
-echo -e "**Impermissible block title found**\n" >> $OUTPUT
-echo -e "Block titles other than Prerequisites, Procedure, Troubleshooting, Next steps, Additional resources, Verification\n" >> $OUTPUT
+# Invalid block title
+echo -e "**Invalid block title found**\n" >> $OUTPUT
+echo -e "Procedures may contain Prerequisites, Procedure, Troubleshooting, Next steps, Additional resources, and Verification.\n" >> $OUTPUT
 cat "$MODULES" | xargs -I {} sh -c '
   FILE="$1"
   if grep -P "^:_mod-docs-content-type: PROCEDURE" "$1" > /dev/null; then
@@ -231,8 +227,8 @@ cat $MODULES | xargs -I {} sh -c '
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
 
-# Procedure embellishment
-echo -e "**Incorrect 'Procedure' title found**\n" >> $OUTPUT
+# Invalid procedure block title
+echo -e "**Invalid 'Procedure' title found**\n" >> $OUTPUT
 echo -e "Example: Procedure for upgrading\n" >> $OUTPUT
 cat $MODULES | xargs -I {} sh -c '
   if grep -Pq "^\.Procedure.+" "$1"; then
@@ -241,16 +237,26 @@ cat $MODULES | xargs -I {} sh -c '
 ' _ {} >> "$OUTPUT"
 echo -e "\n_Done_\n" >> $OUTPUT
 
-# CONCEPT MODULES
-echo -e "## Concept module checks\n" >> $OUTPUT
+# Procedure followed by text - IN PROGRESS
+echo -e "**'Procedure' title not followed by list**\n" >> $OUTPUT
+cat $MODULES | xargs -I {} sh -c '
+  FILE="$1"
+  if grep -iP "(?s)^\.Procedure\n(?:^[[:space:]]*\n)?(?!^\.|\*)(?=^[A-Z]).*" "$FILE"; then
+    echo "- $FILE"
+  fi
+' _ {}
+echo -e "\n_Done_\n" >> $OUTPUT
 
-echo "Running concept module checks"
-# Impermissible block title
-echo -e "**Impermissible block title found**\n" >> $OUTPUT
-echo -e "Concept modules can only contain 'Next steps' or 'Additional resources' as block titles.\nConsider replacing '.Title' with '== Title'.\n" >> $OUTPUT
+# CONCEPT AND REFERENCE MODULES
+echo -e "## Concept and Reference module checks\n" >> $OUTPUT
+
+echo "Checking concept and reference modules"
+# Invalid block title
+echo -e "**Invalid block title found**\n" >> $OUTPUT
+echo -e "Concept and reference modules may contain 'Next steps' or 'Additional resources'.\nConsider replacing block title with level 2 header.\n" >> $OUTPUT
 cat "$MODULES" | xargs -I {} sh -c '
   FILE="$1"
-  if grep -P "^:_mod-docs-content-type: CONCEPT" "$1" > /dev/null; then
+  if grep -P "^:_mod-docs-content-type: (CONCEPT|REFERENCE)" "$1" > /dev/null; then
     if grep -iPq "(?s)^\.(?!\.{1,3}|\s[A-Z]|Next steps|Additional resources).*" "$FILE"; then
       echo "- $FILE"
     fi
@@ -258,10 +264,10 @@ cat "$MODULES" | xargs -I {} sh -c '
 ' _ {} >> $OUTPUT
 echo -e "\n_Done_\n" >> $OUTPUT
 
-# Concept with '=== ' header
+# '=== ' header
 echo -e "**'=== ' header found**" >> $OUTPUT
 cat $MODULES | xargs -I {} sh -c '
-  if grep -P "^:_mod-docs-content-type: CONCEPT" "$1" > /dev/null; then
+  if grep -P "^:_mod-docs-content-type: (CONCEPT|REFERENCE)" "$1" > /dev/null; then
     if grep -P "^=== [A-Z0-9a-z].*" "$1" > /dev/null; then
     echo "- $1"
     fi

@@ -8,6 +8,7 @@
 
 REPO_PATH=.
 ASMB_DIR=assemblies
+MOD_DIR=modules
 
 print_help() {
     echo -e "Extract a list of modules from a master.adoc file"
@@ -25,6 +26,9 @@ print_help() {
     echo -e "  --assembly-dir, -a"
     echo -e "               Location of assemblies within the repository"
     echo -e "               Default: $ASMB_DIR"
+    echo -e "  --module-dir, -a"
+    echo -e "               Location of modules within the repository"
+    echo -e "               Default: $MOD_DIR"
     echo -e "  --help, -h   Print help and exit"
 }
 
@@ -50,6 +54,10 @@ while [ $# -gt 1 ]; do
             ASMB_DIR="$2"
             shift 2
             ;;
+        --module-dir|-m)
+            MOD_DIR="$2"
+            shift 2
+            ;;
         *)
             bye "E: Invalid option: $1"
             ;;
@@ -57,6 +65,7 @@ while [ $# -gt 1 ]; do
 done
 FILE=$1
 ASSEMBLY_PATH=$REPO_PATH/$ASMB_DIR
+MODULE_PATH=$REPO_PATH/$MOD_DIR
 
 # Cleanup from a previous run
 rm -f assemblies.tmp nested-assemblies.tmp modules.tmp &>/dev/null
@@ -106,6 +115,8 @@ sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
 sed -i 's/\[.*\]$//' modules.tmp
 # Remove comments.
 sed -i 's/\/\/.*//' modules.tmp
+# Prepend module path
+sed -i "s|^|$MODULE_PATH|g; s|\/\/|\/|g" modules.tmp
 
 # Sort module names and remove blank lines.
 sort modules.tmp | uniq | grep -v '^$' >&1

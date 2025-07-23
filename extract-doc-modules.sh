@@ -1,8 +1,6 @@
 #!/bin/bash
-# Avital Pinnick with many improvements from Lena Ansorgova
-# Extracts modules from a master.adoc file with assemblies
-# Can be used on an assembly, in theory, but I have not tested this thoroughly.
-
+# Avital Pinnick and Lena Ansorgova
+# Extracts modules from a master.adoc file with assemblies and nested assemblies
 # If your module names do not have prefixes like "proc_", you can search for 'include::'.
 # Example: 'if [[ "$line" =~ "include::" ]]; then'
 # This pulls in all included files.
@@ -61,22 +59,35 @@ FILE=$1
 ASSEMBLY_PATH=$REPO_PATH/$ASMB_DIR
 
 # Cleanup from a previous run
-rm -f assemblies.tmp assemblies.txt modules.tmp &>/dev/null
+rm -f assemblies.tmp nested-assemblies.tmp modules.tmp &>/dev/null
 
 # Copy assemblies found in "FILE" to assemblies.tmp
 while IFS= read -r line; do
     if [[ "$line" =~ "assembly_" ]]; then
-        echo "$line" | sed -E 's/^.*(\/assembly_.*\.adoc).*$/\1/' >> assemblies.tmp
+        echo "$line" | sed -E "s/^.*(\/assembly_.*\.adoc).*$/\1/" >> assemblies.tmp
     fi
 done < "$FILE"
 
-# If assemblies.tmp exists, add assembly path, remove double '//', sort, and output to assemblies.txt.
+sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" assemblies.tmp
+
+# Search for nested assemblies and copy to nested-assemblies.tmp
+while IFS= read -r filepath; do
+    grep -E -h "assembly_" "$filepath" | sed "s/.*\(assembly_.*\.adoc\).*/\1/p" >> nested-assemblies.tmp
+done < "assemblies.tmp"
+
+sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" nested-assemblies.tmp
+
+# If assemblies.tmp exists, sort list and output to assemblies.txt.
 if [[ "assemblies.tmp" ]]; then
-    sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" assemblies.tmp
-    sort assemblies.tmp | uniq > assemblies.txt
+    sort assemblies.tmp | uniq >> assemblies.txt
 fi
 
-# Search for modules in assemblies and copy to modules.tmp
+# If nested-assemblies.tmp exists, sort list and append to assemblies.txt.
+if [[ "nested-assemblies.tmp" ]]; then
+    sort nested-assemblies.tmp | uniq >> assemblies.txt
+fi
+
+# Search for modules in assemblies.txt and copy to modules.tmp
 while IFS= read -r filepath; do
     grep -E -h "proc_|con_|ref_" "$filepath" | sed 's/.*\///' >> modules.tmp
 done < "assemblies.txt"
@@ -88,7 +99,7 @@ while IFS= read -r line; do
     fi
 done < "$FILE"
 
-# Module name cleanup.
+# Module list cleanup.
 # Remove files that you don't want to check.
 sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
 # Remove leveloffsets and empty square brackets.

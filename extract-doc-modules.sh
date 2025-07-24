@@ -106,7 +106,7 @@ fi
 # If nested-assemblies.tmp exists, sort list and append to assemblies.txt.
 if [[ "nested-assemblies.tmp" ]]; then
     sort nested-assemblies.tmp | uniq >> assemblies.txt
-    cat nested-assemblies.tmp | uniq > nested-assemblies.txt
+    sort nested-assemblies.tmp | uniq > nested-assemblies.txt
 fi
 
 # Search for modules in assemblies.txt and copy to modules.tmp

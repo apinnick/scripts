@@ -1,1 +1,13 @@
-../../foreman-documentation/guides/common/assembly_preparing-for-project-upgrade.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-aws.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-azure.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-bare-metal.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-gc.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-ibm.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_monitoring.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_troubleshooting.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_uninstalling.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_upgrading.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
+../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc

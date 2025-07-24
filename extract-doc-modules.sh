@@ -7,8 +7,8 @@
 # You can exclude unwanted files from the final module list with a sed command.
 
 REPO_PATH=.
-ASMB_DIR=assemblies
-MOD_DIR=modules
+ASMB_DIR=assemblies/
+MOD_DIR=modules/
 
 print_help() {
     echo -e "Extract a list of modules from a master.adoc file"
@@ -26,7 +26,7 @@ print_help() {
     echo -e "  --assembly-dir, -a"
     echo -e "               Location of assemblies within the repository"
     echo -e "               Default: $ASMB_DIR"
-    echo -e "  --module-dir, -a"
+    echo -e "  --module-dir, -m"
     echo -e "               Location of modules within the repository"
     echo -e "               Default: $MOD_DIR"
     echo -e "  --help, -h   Print help and exit"
@@ -88,7 +88,7 @@ sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" nested-assemblies.tmp
 
 # If assemblies.tmp exists, sort list and output to assemblies.txt.
 if [[ "assemblies.tmp" ]]; then
-    sort assemblies.tmp | uniq >> assemblies.txt
+    sort assemblies.tmp | uniq > assemblies.txt
 fi
 
 # If nested-assemblies.tmp exists, sort list and append to assemblies.txt.
@@ -109,12 +109,12 @@ while IFS= read -r line; do
 done < "$FILE"
 
 # Module list cleanup.
+# Remove comments.
+sed -i 's/\/\/.*//' modules.tmp
 # Remove files that you don't want to check.
 sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
 # Remove leveloffsets and empty square brackets.
 sed -i 's/\[.*\]$//' modules.tmp
-# Remove comments.
-sed -i 's/\/\/.*//' modules.tmp
 # Prepend module path
 sed -i "s|^|$MODULE_PATH|g; s|\/\/|\/|g" modules.tmp
 

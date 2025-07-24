@@ -32,15 +32,15 @@ print_help() {
     echo -e "               Default: $MOD_DIR"
     echo -e "  --help, -h   Print help and exit"
     echo
-    echo -e "Path composition:"
+    echo -e "Path structure:"
     echo
-    echo -e "Repo path, assembly dir, and module dir will be used to compose"
-    echo -e "the whole path of assemblies and modules in the output as follows:"
+    echo -e "The repo path, assembly dir, and module dir comprise"
+    echo -e "the full path of assemblies and modules in the output as follows:"
     echo
     echo -e "  REPO_PATH/ASSEMBLY_DIR/assembly.adoc"
     echo -e "  REPO_PATH/MODULE_DIR/module.adoc"
     echo
-    echo "Do not put repository path into '-a' nor '-m'!"
+    echo "Do not include the repository path in '-a' or '-m'!"
     echo
 }
 

@@ -19,7 +19,8 @@ print_help() {
     echo
     echo -e "SOURCE_FILE    Path to a master.adoc file"
     echo
-    echo -e "Options:"
+    echo -e "Options"
+    echo
     echo -e "  --repo-path, -r"
     echo -e "               Path to a git repository"
     echo -e "               Default: current dir"
@@ -30,6 +31,17 @@ print_help() {
     echo -e "               Location of modules within the repository"
     echo -e "               Default: $MOD_DIR"
     echo -e "  --help, -h   Print help and exit"
+    echo
+    echo -e "Path composition"
+    echo
+    echo -e "Repo path, assembly dir, and module dir will be used to compose"
+    echo -e "the whole path of assemblies and modules in the output as follows:"
+    echo
+    echo -e "  REPO_PATH/ASSEMBLY_DIR/assembly.adoc"
+    echo -e "  REPO_PATH/MODULE_DIR/module.adoc"
+    echo
+    echo "Do not put repository path into '-a' nor '-m'!"
+    echo
 }
 
 bye() {

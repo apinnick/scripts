@@ -21,13 +21,13 @@ print_help() {
     echo
     echo -e "Options"
     echo
-    echo -e "  --repo-path, -r"
+    echo -e "  --repo-path, -r REPO_PATH/"
     echo -e "               Path to a git repository"
     echo -e "               Default: current dir"
-    echo -e "  --assembly-dir, -a"
+    echo -e "  --assembly-dir, -a ASSEMBLY_DIR/"
     echo -e "               Location of assemblies within the repository"
     echo -e "               Default: $ASMB_DIR"
-    echo -e "  --module-dir, -m"
+    echo -e "  --module-dir, -m MODULE_DIR/"
     echo -e "               Location of modules within the repository"
     echo -e "               Default: $MOD_DIR"
     echo -e "  --help, -h   Print help and exit"

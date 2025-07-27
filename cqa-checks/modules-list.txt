@@ -1,4 +1,3 @@
-../../sandboxed-containers-documentation/modules/
 ../../sandboxed-containers-documentation/modules/con_about-node-eligibility-checks.adoc
 ../../sandboxed-containers-documentation/modules/con_azure-configuring-outbound-connections.adoc
 ../../sandboxed-containers-documentation/modules/con_block_volume_support.adoc
@@ -49,4 +48,3 @@
 ../../sandboxed-containers-documentation/modules/ref_about-metrics.adoc
 ../../sandboxed-containers-documentation/modules/ref_common-terms.adoc
 ../../sandboxed-containers-documentation/modules/ref_kataconfig-status-messages.adoc
-../../sandboxed-containers-documentation/modules/ To do: Add an architecture section explaining peer pods and move permanent ID ("peer-pods") from ref_common-terms.

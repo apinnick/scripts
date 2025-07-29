@@ -81,6 +81,7 @@ MODULE_PATH=$REPO_PATH/$MOD_DIR
 
 # Cleanup from a previous run
 rm -f assemblies.tmp nested-assemblies.tmp modules.tmp &>/dev/null
+rm -f assemblies.txt nested-assemblies.txt &>/dev/null
 
 # Copy assemblies found in "FILE" to assemblies.tmp
 while IFS= read -r line; do

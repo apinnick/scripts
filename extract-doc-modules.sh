@@ -89,30 +89,34 @@ while IFS= read -r line; do
     fi
 done < "$FILE"
 
-sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" assemblies.tmp
+# If assemblies.tmp exists:
+if [ -f "assemblies.tmp" ]; then
+    sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" assemblies.tmp
 
-# Search for nested assemblies and copy to nested-assemblies.tmp
-while IFS= read -r filepath; do
-    grep -E -h "assembly_" "$filepath" | sed "s/.*\(assembly_.*\.adoc\).*/\1/p" >> nested-assemblies.tmp
-done < "assemblies.tmp"
+    # Search for nested assemblies and copy to nested-assemblies.tmp
+    while IFS= read -r filepath; do
+        grep -E -h "assembly_" "$filepath" | sed "s/.*\(assembly_.*\.adoc\).*/\1/p" >> nested-assemblies.tmp
+    done < "assemblies.tmp"
 
-sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" nested-assemblies.tmp
+    sed -i "s|^|$ASSEMBLY_PATH|g; s|\/\/|\/|g" nested-assemblies.tmp
 
-# If assemblies.tmp exists, sort list and output to assemblies.txt.
-if [[ "assemblies.tmp" ]]; then
+    # Sort list and output to assemblies.txt.
     sort assemblies.tmp | uniq > assemblies.txt
 fi
 
 # If nested-assemblies.tmp exists, sort list and append to assemblies.txt.
-if [[ "nested-assemblies.tmp" ]]; then
+if [ -f "nested-assemblies.tmp" ]; then
     sort nested-assemblies.tmp | uniq >> assemblies.txt
     sort nested-assemblies.tmp | uniq > nested-assemblies.txt
 fi
 
-# Search for modules in assemblies.txt and copy to modules.tmp
-while IFS= read -r filepath; do
-    grep -E -h "proc_|con_|ref_" "$filepath" | sed 's/.*\///' >> modules.tmp
-done < "assemblies.txt"
+# If assemblies.txt exists:
+if [ -f "assemblies.txt" ]; then
+    # Search for modules in assemblies.txt and copy to modules.tmp
+    while IFS= read -r filepath; do
+        grep -E -h "proc_|con_|ref_" "$filepath" | sed 's/.*\///' >> modules.tmp
+    done < "assemblies.txt"
+fi
 
 # Copy modules found in "FILE" to modules.tmp
 while IFS= read -r line; do

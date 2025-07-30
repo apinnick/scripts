@@ -137,7 +137,7 @@ sed -i 's/\[.*\]$//' modules.tmp
 sed -i "s|^|$MODULE_PATH|g; s|\/\/|\/|g" modules.tmp
 
 # Sort module names and remove blank lines.
-sort modules.tmp | uniq | grep -v '^$' >&1
+sort modules.tmp | uniq | grep -v "^$MODULE_PATH$" >&1
 
 # Clean up temporary files.
 rm *.tmp &>/dev/null

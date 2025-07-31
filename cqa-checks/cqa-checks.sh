@@ -1,5 +1,5 @@
 #!/bin/bash
-# Avital Pinnick, 2025
+# Avital Pinnick and Gemini
 
 OUTPUT="CQA-report.md"
 SUMMARY="CQA-checks-summary.md"
@@ -255,7 +255,7 @@ cat $MODULES | xargs -I {} sh -c '
 echo -e "- _Done_\n" >> $OUTPUT
 
 # LONG PROCEDURE
-CHECK="Procedure longer than 10 steps foun"
+CHECK="Procedure longer than 10 steps found"
 echo -e "$CHECK:\n" >> $OUTPUT
 echo -e "- $CHECK" >> $SUMMARY
 cat $MODULES | xargs -I {} sh -c '

@@ -1,9 +1,9 @@
-# CQA modularization report
-Created 2025-08-03
+# CQA report
+Created 2025-07-27
 
-This report describes modularization issues found in 'assemblies.txt' and 'modules-list.txt'. For details, see the [Modular documentation templates checklist](https://docs.google.com/document/d/13NAUVAby1y1qfT77QFIZrMBhi872e7IEvAC9MUpGXbQ/edit?tab=t.0) and [CQA template](https://docs.google.com/spreadsheets/d/11LyS_q40rF0IQ0p-U-ZG1legKHB7dKbv8Kn279wqvpA/edit?usp=drive_link).
+This report describes Content Quality Assessment issues found in 'assemblies.txt' and 'modules-list.txt'. For details, see the [Modular documentation templates checklist](https://docs.google.com/document/d/13NAUVAby1y1qfT77QFIZrMBhi872e7IEvAC9MUpGXbQ/edit?tab=t.0) and CQA template.
 
-The [cqa-mod-checks script](https://github.com/apinnick/scripts/blob/main/cqa-mod-checks/cqa-mod-checks.sh) is a work on progress and might contain errors. Feedback: [Avital Pinnick](mailto:apinnick@redhat.com).
+The [cqa-checks script](https://github.com/apinnick/scripts/blob/main/cqa-checks/cqa-checks.sh) is a work on progress and might contain errors. Feedback: [Avital Pinnick](mailto:apinnick@redhat.com).
 
 ## File checks
 
@@ -95,7 +95,7 @@ Nested assembly conditions:
 
 - _Done_
 
-Procedure longer than 10 steps found:
+Procedure longer than 10 steps foun:
 
 - ../../sandboxed-containers-documentation/modules/proc_creating-peer-pods-secret.adoc
 - ../../sandboxed-containers-documentation/modules/proc_creating-ssh-key-secret.adoc

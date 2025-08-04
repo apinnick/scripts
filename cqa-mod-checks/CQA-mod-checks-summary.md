@@ -1,5 +1,5 @@
-# CQA checks summary
-Created 2025-07-27
+# CQA modularization checks summary
+Created 2025-08-03
 
 **File checks**
 
@@ -19,11 +19,12 @@ Created 2025-07-27
   - 'ifdef::context[:parent-context: {context}]' missing
   - 'ifdef::parent-context[:context: {parent-context}]' missing
   - 'ifndef::parent-context[:!context:]' missing
+- To do: 'include::' on consecutive lines
 
 **Procedure module checks**
 
 - '== ' header found
-- Procedure longer than 10 steps foun
+- Procedure longer than 10 steps found
 - Block title other than Prerequisites, Procedure, Troubleshooting, Next steps, Additional resources, or Verification found
 - More than one procedure found
 - Invalid Procedure title found

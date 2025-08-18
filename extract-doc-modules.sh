@@ -131,6 +131,8 @@ done < "$FILE"
 sed -i 's/\/\/.*//' modules.tmp
 # Remove files that you don't want to check.
 sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
+# Remove files containing attributes - {}
+sed -i '/{/d' modules.tmp
 # Remove leveloffsets and empty square brackets.
 sed -i 's/\[.*\]$//' modules.tmp
 # Prepend module path

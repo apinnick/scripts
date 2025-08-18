@@ -262,7 +262,7 @@ echo -e "- _Done_\n" >> $OUTPUT
 CHECK="Procedure longer than 10 steps found"
 echo -e "$CHECK:\n" >> $OUTPUT
 echo -e "- $CHECK" >> $SUMMARY
-cat $MODULES | xargs -I {} sh -c '
+cat $MODULES | xargs -I {} bash -c '
   steps=$(grep -E "^\. [A-Z]" "$1" | wc -l)
   if (( steps >= 10 )); then
     echo "- $1"

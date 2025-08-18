@@ -264,7 +264,7 @@ echo -e "$CHECK:\n" >> $OUTPUT
 echo -e "- $CHECK" >> $SUMMARY
 cat $MODULES | xargs -I {} bash -c '
   steps=$(grep -E "^\. [A-Z]" "$1" | wc -l)
-  if (( steps >= 10 )); then
+  if (( steps > 10 )); then
     echo "- $1"
   fi
 ' _ {} >> "$OUTPUT"

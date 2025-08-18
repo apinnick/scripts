@@ -133,11 +133,11 @@ sed -i 's/\/\/.*//' modules.tmp
 sed -i 's/proc_providing-feedback-on-red-hat-documentation.adoc//g' modules.tmp
 # Remove leveloffsets and empty square brackets.
 sed -i 's/\[.*\]$//' modules.tmp
-# Prepend module path
+# Prepend module path to non-empty lines
 sed -i "/^$/! s|^|$MODULE_PATH|g; s|\/\/|\/|g" modules.tmp
 
 # Sort module names and remove blank lines.
-sort modules.tmp | uniq | grep -v "^$MODULE_PATH" >&1
+sort modules.tmp | uniq | grep -v "^$" >&1
 
 # Clean up temporary files.
 rm *.tmp &>/dev/null

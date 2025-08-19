@@ -242,7 +242,7 @@ export -f check_includes
 
 # Use xargs to process each file in parallel if needed.
 # The 'check_includes "$1"' part is the key.
-cat "$ASSEMBLIES" | xargs -I {} -P 4 sh -c 'check_includes "$1"' _ {} >> "$OUTPUT"
+cat "$ASSEMBLIES" | xargs -I {} -P 4 bash -c 'check_includes "$1"' _ {} >> "$OUTPUT"
 echo -e "- _Done_\n" >> $OUTPUT
 # END of check for 'include::' directive on consecutive lines
 

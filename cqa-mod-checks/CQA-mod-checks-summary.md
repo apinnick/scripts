@@ -1,5 +1,5 @@
 # CQA modularization checks summary
-Created 2025-08-03
+Created 2025-09-04
 
 **File checks**
 
@@ -15,11 +15,11 @@ Created 2025-08-03
 - More than one '= ' header found
 - '=== ' header found
 - Block title ('.Text') found
+- 'include::' directives on consecutive lines
 - Nested assembly conditions
   - 'ifdef::context[:parent-context: {context}]' missing
   - 'ifdef::parent-context[:context: {parent-context}]' missing
   - 'ifndef::parent-context[:!context:]' missing
-- To do: 'include::' on consecutive lines
 
 **Procedure module checks**
 

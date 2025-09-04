@@ -1,5 +1,5 @@
 # CQA modularization report
-Created 2025-08-03
+Created 2025-09-04
 
 This report describes modularization issues found in 'assemblies.txt' and 'modules-list.txt'. For details, see the [Modular documentation templates checklist](https://docs.google.com/document/d/13NAUVAby1y1qfT77QFIZrMBhi872e7IEvAC9MUpGXbQ/edit?tab=t.0) and [CQA template](https://docs.google.com/spreadsheets/d/11LyS_q40rF0IQ0p-U-ZG1legKHB7dKbv8Kn279wqvpA/edit?usp=drive_link).
 
@@ -9,12 +9,18 @@ The [cqa-mod-checks script](https://github.com/apinnick/scripts/blob/main/cqa-mo
 
 Content type attribute missing or invalid:
 
-- ../../sandboxed-containers-documentation/modules/con_about-node-eligibility-checks.adoc
-- ../../sandboxed-containers-documentation/modules/proc_ibm-creating-peerpod-vm-image-config-map.adoc
 - _Done_
 
 ID missing:
 
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-hyperv.adoc
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-kubevirt.adoc
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-kvm.adoc
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-nutanix.adoc
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-openstack.adoc
+- ../../foreman-documentation/guides/common/assembly_configuring-virt-who-vmware.adoc
+- ../../foreman-documentation/guides/common/assembly_overview-of-vm-subscriptions.adoc
+- ../../foreman-documentation/guides/common/assembly_troubleshooting-virt-who.adoc
 - _Done_
 
 Title longer than 10 words found:
@@ -23,18 +29,6 @@ Title longer than 10 words found:
 
 '= ' header not followed by blank line:
 
-- ../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-aws.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-azure.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-bare-metal.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-gc.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-ibm.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_monitoring.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_troubleshooting.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_uninstalling.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_upgrading.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-- ../../sandboxed-containers-documentation/modules/con_about-node-eligibility-checks.adoc
 - _Done_
 
 Admonition with title found:
@@ -53,40 +47,28 @@ More than one '= ' header found:
 
 '=== ' header found:
 
-- ../../sandboxed-containers-documentation/assemblies/assembly_uninstalling.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc
 - _Done_
 
 Block title ('.Text') found:
 
-- ../../sandboxed-containers-documentation/assemblies/assembly_monitoring.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_uninstalling.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_upgrading.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
-- ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc
+- _Done_
+
+'include::' directives on consecutive lines:
+
 - _Done_
 
 Nested assembly conditions:
 
 - 'ifdef::context[:parent-context: {context}]' missing:
 
-  - ../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc
   - _Done_
 
 - 'ifdef::parent-context[:context: {parent-context}]' missing:
 
-  - ../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc
   - _Done_
 
 - 'ifndef::parent-context[:!context:]' missing:
 
-  - ../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
-  - ../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc
   - _Done_
 
 ## Procedure module checks:
@@ -97,24 +79,15 @@ Nested assembly conditions:
 
 Procedure longer than 10 steps found:
 
-- ../../sandboxed-containers-documentation/modules/proc_creating-peer-pods-secret.adoc
-- ../../sandboxed-containers-documentation/modules/proc_creating-ssh-key-secret.adoc
-- ../../sandboxed-containers-documentation/modules/proc_selecting-a-custom-pod-vm-image.adoc
+- ../../foreman-documentation/guides/common/modules/proc_deploying-a-virt-who-configuration-on-target-server.adoc
 - _Done_
 
 Block title other than Prerequisites, Procedure, Troubleshooting, Next steps, Additional resources, or Verification found:
 
-- ../../sandboxed-containers-documentation/modules/proc_azure-configuring-the-default-worker-subnet-for-outbound-connections.adoc
-- ../../sandboxed-containers-documentation/modules/proc_creating-kataconfig-cr-cli.adoc
-- ../../sandboxed-containers-documentation/modules/proc_creating-nfd-cr.adoc
-- ../../sandboxed-containers-documentation/modules/proc_deleting-cr-cli.adoc
-- ../../sandboxed-containers-documentation/modules/proc_deleting-crd-cli.adoc
-- ../../sandboxed-containers-documentation/modules/proc_enabling-debug-logs-crio.adoc
-- ../../sandboxed-containers-documentation/modules/proc_gc-creating-podvm-image.adoc
-- ../../sandboxed-containers-documentation/modules/proc_installing-operator-cli.adoc
-- ../../sandboxed-containers-documentation/modules/proc_optional-enabling-nodes-block-device.adoc
-- ../../sandboxed-containers-documentation/modules/proc_optional-provisioning-storage.adoc
-- ../../sandboxed-containers-documentation/modules/proc_viewing-debug-logs-components.adoc
+- ../../foreman-documentation/guides/common/modules/proc_checking-virt-who-status.adoc
+- ../../foreman-documentation/guides/common/modules/proc_creating-a-virt-who-configuration.adoc
+- ../../foreman-documentation/guides/common/modules/proc_editing-a-virt-who-configuration.adoc
+- ../../foreman-documentation/guides/common/modules/proc_enabling-rhsm-debug-logging.adoc
 - _Done_
 
 More than one procedure found:
@@ -133,11 +106,8 @@ Procedure not followed by list found:
 
 Block title other than 'Next steps' or 'Additional resources' found:
 
-- ../../sandboxed-containers-documentation/modules/con_block_volume_support.adoc
-- ../../sandboxed-containers-documentation/modules/con_compatibility-with-osc.adoc
-- ../../sandboxed-containers-documentation/modules/con_osc-resource-requirements.adoc
-- ../../sandboxed-containers-documentation/modules/proc_viewing-metrics.adoc
-- ../../sandboxed-containers-documentation/modules/ref_kataconfig-status-messages.adoc
+- ../../foreman-documentation/guides/common/modules/ref_troubleshooting-virt-who.adoc
+- ../../foreman-documentation/guides/common/modules/ref_virt-who-configuration-overview.adoc
 - _Done_
 
 '=== ' header found:

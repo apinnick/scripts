@@ -1,3 +1,0 @@
-../../sandboxed-containers-documentation/assemblies/assembly_about-osc.adoc
-../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-cli.adoc
-../../sandboxed-containers-documentation/assemblies/assembly_deploying-osc-web.adoc

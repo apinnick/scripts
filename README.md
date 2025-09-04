@@ -10,30 +10,27 @@
 
 ### Running a Vale check on the module list
 
-You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list.
+You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list by concatenating extract-doc-modules.sh and Vale:
 
-1. Run the [extract-doc-modules](extract-doc-modules.sh) script to generate a file called `module-list.txt`.
+````
+$ sh extract-doc-modules.sh -r ../my-repo -a path/to/assemblies -m path/to/modules ../../full/path/to/master.adoc > modules-list.txt \
+&& while IFS= read -r filepath; do vale "$filepath"; done < modules-list.txt
+````
 
-2. Run the Vale check on the files listed in `module-list.txt`:
+Output:
+````
+✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
+✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
 
-      ````
-      $ while IFS= read -r filepath; do vale "$filepath"; done < module-list.txt
-      ````
-
-      Output:
-      ````
-      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
-      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
-      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
-      ✔ 0 errors, 0 warnings and 0 suggestions in 1 file.
-
-      proc_checking-virt-who-status.adoc
-      14:1  warning  Unsupported titles cannot be    AsciiDocDITA.TaskTitle
-                      mapped to DITA tasks.
-      14:1  warning  Block titles can only be        AsciiDocDITA.BlockTitle
-                      assigned to examples, figures,
-                      and tables in DITA.
-      ````
+proc_checking-virt-who-status.adoc
+14:1  warning  Unsupported titles cannot be    AsciiDocDITA.TaskTitle
+                mapped to DITA tasks.
+14:1  warning  Block titles can only be        AsciiDocDITA.BlockTitle
+                assigned to examples, figures,
+                and tables in DITA.
+````
 
 ## Find level 2+ headers
 

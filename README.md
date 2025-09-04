@@ -12,21 +12,7 @@
 
 You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list.
 
-1. Run the [extract-doc-modules](extract-doc-modules.sh) script to generate a module list for the _Configuring virt-who for virtual machine subscriptions_ guide:
-
-      ````
-      $ sh extract-doc-modules.sh guides/doc-Configuring_virt_who_VM_Subscriptions/master.adoc
-      ````
-
-      module-list.txt:
-
-      ````
-      con_configuring-virt-who-for-provider.adoc
-      con_troubleshooting-virt-who.adoc
-      con_virtual-machine-subscriptions-overview.adoc
-      proc_checking-for-subscriptions-that-require-virt-who.adoc
-      proc_checking-virt-who-status.adoc
-      ````
+1. Run the [extract-doc-modules](extract-doc-modules.sh) script to generate a file called `module-list.txt`.
 
 2. Run the Vale check on the files listed in `module-list.txt`:
 

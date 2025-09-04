@@ -10,14 +10,11 @@
 
 ### Running a Vale check on the module list
 
-You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list.
-
-1. Run the [extract-doc-modules](extract-doc-modules.sh) script to generate a file called `module-list.txt`.
-
-2. Run the Vale check on the files listed in `module-list.txt`:
+You can run an [asciidoctor-dita-vale](https://github.com/jhradilek/asciidoctor-dita-vale) Vale check on the modules list by concatenating extract-doc-modules.sh and Vale:
 
       ````
-      $ while IFS= read -r filepath; do vale "$filepath"; done < module-list.txt
+      $ sh extract-doc-modules.sh -r ../my-repo -a path/to/assemblies -m path/to/modules ../../full/path/to/master.adoc > modules-list.txt \
+      && while IFS= read -r filepath; do vale "$filepath"; done < modules-list.txt
       ````
 
       Output:

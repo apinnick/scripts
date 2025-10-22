@@ -9,7 +9,7 @@ rm $OUTPUT &>/dev/null
 
 echo -e "# CQA modularization report\nCreated $(date +"%Y-%m-%d")\n" >> $OUTPUT
 echo -e "# CQA modularization checks summary\nCreated $(date +"%Y-%m-%d")\n" > $SUMMARY
-echo -e "This report describes modularization issues found in '$ASSEMBLIES' and '$MODULES'. For details, see the [Modular documentation templates checklist](https://docs.google.com/document/d/13NAUVAby1y1qfT77QFIZrMBhi872e7IEvAC9MUpGXbQ/edit?tab=t.0) and [CQA template](https://docs.google.com/spreadsheets/d/11LyS_q40rF0IQ0p-U-ZG1legKHB7dKbv8Kn279wqvpA/edit?usp=drive_link).\n" >> $OUTPUT
+echo -e "This report describes modularization issues found in '$ASSEMBLIES' and '$MODULES'.\n" >> $OUTPUT
 
 echo -e "The [cqa-mod-checks script](https://github.com/apinnick/scripts/blob/main/cqa-mod-checks/cqa-mod-checks.sh) is a work on progress and might contain errors. Feedback: [Avital Pinnick](mailto:apinnick@redhat.com).\n" >> $OUTPUT
 

@@ -16,3 +16,4 @@ If the reference module includes best practices, use "Follow these guidelines ..
 1. Use present tense.
 1. Use second person, not third person.
 1. Do not begin a sentence with "This" or "These".
+1. Insert a blank line between the short description and the first paragraph.

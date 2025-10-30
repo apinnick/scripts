@@ -1,6 +1,6 @@
 # Scripts and useful commands
 
-## New: Generate short description with Cursor AI (WIP)
+## New: Generate short description with Cursor AI
 
 [write-abstract](.cursor/commands/write-abstract.md) Cursor AI command generates an abstract or short description for Asciidoc module.
 

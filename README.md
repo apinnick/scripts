@@ -2,7 +2,7 @@
 
 ## New: Generate short description with Cursor AI
 
-[write-abstract](.cursor/commands/write-abstract.md) Cursor AI command generates an abstract or short description for Asciidoc module.
+[write-abstract](.cursor/commands/write-abstract.md) Cursor AI command generates an abstract or short description for Asciidoc module. I do not recommend using this command to update hundreds of files because I think each output should be evaluated separately. 
 
 ## Check CQA modularization criteria
 
